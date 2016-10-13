@@ -47,7 +47,7 @@ public class AccountAccessor
 
       if (s1Res.next())
       {
-        int id = s1Res.getInt("id");
+        Long id = s1Res.getLong("id");
         String username = s1Res.getString("username");
         String password = s1Res.getString("password");
         String pwResetToken = s1Res.getString("pw_reset_token");
@@ -85,7 +85,7 @@ public class AccountAccessor
       ResultSet generatedKeys = s.getGeneratedKeys();
       if (rowCount != 0 && generatedKeys.next())
       {
-        acc.id = (int) generatedKeys.getLong(1);
+        acc.id = generatedKeys.getLong(1);
         s.close();
         cacheByEmail.put(acc.email, acc);
         return true;
@@ -123,7 +123,7 @@ public class AccountAccessor
       s1.setString(i++, acc.email);
       s1.setString(i++, acc.pwResetToken);
       s1.setInt(i++, acc.failedLoginAttempts);
-      s1.setInt(i++, acc.id);
+      s1.setLong(i++, acc.id);
       int rowCount = s1.executeUpdate();
       s1.close();
 
@@ -178,5 +178,12 @@ public class AccountAccessor
     Account acc = cacheByEmail.get(email);
     if (acc != null && acc.authToken.equals(authToken)) return true;
     return false;
+  }
+
+  public static Long checkAuthTokenAndGetAccId(String email, String authToken) throws WrongAuthentificationTokenException
+  {
+    Account acc = cacheByEmail.get(email);
+    if (acc != null && acc.authToken.equals(authToken)) return acc.id;
+    throw new WrongAuthentificationTokenException();
   }
 }

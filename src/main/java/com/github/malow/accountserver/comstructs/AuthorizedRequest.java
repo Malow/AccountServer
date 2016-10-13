@@ -14,9 +14,7 @@ public class AuthorizedRequest extends Request
 
   private boolean isAuthorized()
   {
-    if (AccountAccessor.checkAuthToken(this.email, this.authToken)) return true;
-    System.out.println("Un-Authorized request recived for: " + this.email);
-    return false;
+    return AccountAccessor.checkAuthToken(this.email, this.authToken);
   }
 
   @Override
