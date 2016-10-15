@@ -18,6 +18,7 @@ import com.github.malow.accountserver.httpsapi.AccountContextHandlers.LoginHandl
 import com.github.malow.accountserver.httpsapi.AccountContextHandlers.RegisterHandler;
 import com.github.malow.accountserver.httpsapi.AccountContextHandlers.ResetPasswordHandler;
 import com.github.malow.accountserver.httpsapi.AccountContextHandlers.SendPasswordResetTokenHandler;
+import com.github.malow.malowlib.MaloWLogger;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -90,9 +91,9 @@ public class HttpsApiServer
             SSLParameters defaultSSLParameters = c.getDefaultSSLParameters();
             params.setSSLParameters(defaultSSLParameters);
           }
-          catch (Exception ex)
+          catch (Exception e)
           {
-            System.out.println("Failed to create HTTPS port");
+            MaloWLogger.error("Failed to create HTTPS port", e);
           }
         }
       });
@@ -100,8 +101,7 @@ public class HttpsApiServer
     }
     catch (Exception e)
     {
-      System.out.println("Exception while starting RequestListener.");
-      e.printStackTrace();
+      MaloWLogger.error("Exception while starting RequestListener", e);
     }
   }
 }

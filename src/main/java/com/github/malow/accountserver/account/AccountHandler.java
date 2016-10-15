@@ -16,6 +16,7 @@ import com.github.malow.accountserver.database.AccountAccessor.UsernameAlreadyEx
 import com.github.malow.accountserver.database.Database.UnexpectedException;
 import com.github.malow.accountserver.handlers.EmailHandler;
 import com.github.malow.accountserver.handlers.PasswordHandler;
+import com.github.malow.malowlib.MaloWLogger;
 
 public class AccountHandler
 {
@@ -42,8 +43,7 @@ public class AccountHandler
     }
     catch (UnexpectedException e)
     {
-      System.out.println("Unexpected error when trying to login: " + e.toString());
-      e.printStackTrace();
+      MaloWLogger.error("Unexpected error when trying to login", e);
       return new ErrorResponse(false, "Unexpected error");
     }
   }
@@ -75,14 +75,12 @@ public class AccountHandler
     }
     catch (UnexpectedException e)
     {
-      System.out.println("Unexpected Database error when trying to register: " + e.error);
-      e.printStackTrace();
+      MaloWLogger.error("Unexpected Database error when trying to register", e);
       return new ErrorResponse(false, "Unexpected error");
     }
     catch (Exception e)
     {
-      System.out.println("Unexpected exception when trying to register: " + e.toString());
-      e.printStackTrace();
+      MaloWLogger.error("Unexpected exception when trying to register", e);
       return new ErrorResponse(false, "Unexpected error");
     }
   }
@@ -102,8 +100,7 @@ public class AccountHandler
     }
     catch (UnexpectedException e)
     {
-      System.out.println("Unexpected error when trying to sendPasswordResetToken: " + e.toString());
-      e.printStackTrace();
+      MaloWLogger.error("Unexpected error when trying to sendPasswordResetToken", e);
       return new ErrorResponse(false, "Unexpected error");
     }
   }
@@ -130,8 +127,7 @@ public class AccountHandler
     }
     catch (UnexpectedException e)
     {
-      System.out.println("Unexpected error when trying to resetPassword: " + e.toString());
-      e.printStackTrace();
+      MaloWLogger.error("Unexpected error when trying to resetPassword: ", e);
       return new ErrorResponse(false, "Unexpected error");
     }
   }

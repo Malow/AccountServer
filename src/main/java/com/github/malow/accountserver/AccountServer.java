@@ -5,6 +5,7 @@ import com.github.malow.accountserver.database.AccountAccessor.WrongAuthentifica
 import com.github.malow.accountserver.database.Database;
 import com.github.malow.accountserver.handlers.EmailHandler;
 import com.github.malow.accountserver.httpsapi.HttpsApiServer;
+import com.github.malow.malowlib.MaloWLogger;
 
 /**
  * 
@@ -25,8 +26,7 @@ public class AccountServer
     EmailHandler.init(config.gmailUsername, config.gmailPassword);
     Database.init(config.databaseName, config.databaseUser, config.databasePassword);
 
-    System.out.println("Starting GladiatorManagerServer in directory " + System.getProperty("user.dir"));
-    System.out.println("Using port " + config.httpsApiPort);
+    MaloWLogger.info("Starting GladiatorManagerServer in directory " + System.getProperty("user.dir") + " using port " + config.httpsApiPort);
     httpsApiServer = new HttpsApiServer();
     httpsApiServer.start(config);
   }
@@ -42,6 +42,6 @@ public class AccountServer
     httpsApiServer.close();
     Database.close();
 
-    System.out.println("Server closed successfully");
+    MaloWLogger.info("Server closed successfully");
   }
 }

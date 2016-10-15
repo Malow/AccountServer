@@ -3,6 +3,8 @@ package com.github.malow.accountserver.database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+import com.github.malow.malowlib.MaloWLogger;
+
 public class Database
 {
   public static class UnexpectedException extends Exception
@@ -45,8 +47,7 @@ public class Database
     }
     catch (Exception e)
     {
-      System.out.println("Error while trying to start SQL connection: " + e.toString());
-      e.printStackTrace();
+      MaloWLogger.error("Error while trying to start SQL connection", e);
     }
   }
 
@@ -58,8 +59,7 @@ public class Database
     }
     catch (Exception e)
     {
-      System.out.println("Error while trying to close SQL connection: " + e.toString());
-      e.printStackTrace();
+      MaloWLogger.error("Error while trying to close SQL connection", e);
     }
   }
 }

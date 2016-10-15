@@ -12,6 +12,8 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import com.github.malow.malowlib.MaloWLogger;
+
 public class EmailHandler
 {
   private static Properties props = null;
@@ -79,8 +81,7 @@ public class EmailHandler
     }
     catch (Exception e)
     {
-      System.out.println("Exception when trying to send email: " + e.toString());
-      e.printStackTrace();
+      MaloWLogger.error("Exception when trying to send email", e);
       return false;
     }
   }

@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 import com.github.malow.accountserver.comstructs.Request;
+import com.github.malow.malowlib.MaloWLogger;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 
@@ -33,7 +34,7 @@ public class ContextHelpers
     }
     catch (Exception e)
     {
-      System.out.println("Failed when trying to parse request: " + msg);
+      MaloWLogger.error("Failed when trying to parse request: " + msg, e);
       return null;
     }
   }
@@ -49,7 +50,7 @@ public class ContextHelpers
     }
     catch (IOException e)
     {
-      System.out.println("Failed when trying to send response: " + response);
+      MaloWLogger.error("Failed when trying to send response: " + response, e);
     }
   }
 }
