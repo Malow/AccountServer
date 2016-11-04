@@ -1,6 +1,8 @@
 package com.github.malow.accountserver.comstructs;
 
-public class Request
+import com.github.malow.malowlib.network.https.HttpsPostRequest;
+
+public class Request implements HttpsPostRequest
 {
   public String email;
 
@@ -9,6 +11,7 @@ public class Request
     this.email = email;
   }
 
+  @Override
   public boolean isValid()
   {
     if (this.email != null) return true;

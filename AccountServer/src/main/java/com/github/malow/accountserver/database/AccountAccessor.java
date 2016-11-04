@@ -186,6 +186,11 @@ public class AccountAccessor
     throw new WrongAuthentificationTokenException();
   }
 
+  public static void updateCacheOnly(Account acc)
+  {
+    cacheByEmail.put(acc.email, acc);
+  }
+
   public static void clearCache()
   {
     cacheByEmail.clear();

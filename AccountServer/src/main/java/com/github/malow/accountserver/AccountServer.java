@@ -4,8 +4,14 @@ import com.github.malow.accountserver.database.AccountAccessor;
 import com.github.malow.accountserver.database.AccountAccessor.WrongAuthentificationTokenException;
 import com.github.malow.accountserver.database.Database;
 import com.github.malow.accountserver.handlers.EmailHandler;
-import com.github.malow.accountserver.httpsapi.HttpsApiServer;
+import com.github.malow.accountserver.handlers.HttpsApiHandlers.ClearCacheHandler;
+import com.github.malow.accountserver.handlers.HttpsApiHandlers.LoginHandler;
+import com.github.malow.accountserver.handlers.HttpsApiHandlers.RegisterHandler;
+import com.github.malow.accountserver.handlers.HttpsApiHandlers.ResetPasswordHandler;
+import com.github.malow.accountserver.handlers.HttpsApiHandlers.SendPasswordResetTokenHandler;
+import com.github.malow.accountserver.handlers.HttpsApiHandlers.TestHandler;
 import com.github.malow.malowlib.MaloWLogger;
+import com.github.malow.malowlib.network.https.HttpsPostServer;
 
 /**
  * 
@@ -19,16 +25,25 @@ import com.github.malow.malowlib.MaloWLogger;
  */
 public class AccountServer
 {
-  private static HttpsApiServer httpsApiServer;
+  private static HttpsPostServer httpsServer;
 
   public static void start(AccountServerConfig config)
   {
     EmailHandler.init(config.gmailUsername, config.gmailPassword, config.appName, config.enableEmailSending);
     Database.init(config.databaseName, config.databaseUser, config.databasePassword);
 
-    MaloWLogger.info("Starting GladiatorManagerServer in directory " + System.getProperty("user.dir") + " using port " + config.httpsApiPort);
-    httpsApiServer = new HttpsApiServer();
-    httpsApiServer.start(config);
+    MaloWLogger.info("Starting " + config.appName + " in directory " + System.getProperty("user.dir") + " using port " + config.httpsConfig.port);
+    httpsServer = new HttpsPostServer(config.httpsConfig);
+    httpsServer.createContext(config.httpsConfig.testPath, new TestHandler());
+    httpsServer.createContext(config.httpsConfig.loginPath, new LoginHandler());
+    httpsServer.createContext(config.httpsConfig.registerPath, new RegisterHandler());
+    httpsServer.createContext(config.httpsConfig.sendPwResetTokenPath, new SendPasswordResetTokenHandler());
+    httpsServer.createContext(config.httpsConfig.resetPwPath, new ResetPasswordHandler());
+    if (config.allowClearCacheOperation)
+    {
+      httpsServer.createContext(config.httpsConfig.clearCachePath, new ClearCacheHandler());
+    }
+    httpsServer.start();
   }
 
   public static Long checkAuthentication(String email, String authToken) throws WrongAuthentificationTokenException
@@ -39,7 +54,7 @@ public class AccountServer
 
   public static void close()
   {
-    httpsApiServer.close();
+    httpsServer.close();
     Database.close();
 
     MaloWLogger.info("Server closed successfully");

@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import com.github.malow.malowlib.HttpsClient;
+import com.github.malow.malowlib.network.https.HttpsPostClient;
 import com.google.gson.Gson;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLNonTransientConnectionException;
 
@@ -15,7 +15,7 @@ public class TestHelpers
 {
   public static void beforeTest() throws Exception
   {
-    HttpsClient.setHost(Config.HOST);
+    HttpsPostClient.setHost(Config.HOST);
     resetDatabaseTable("accounts");
     ServerConnection.clearCache();
   }

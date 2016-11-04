@@ -4,20 +4,17 @@ import org.mindrot.jbcrypt.BCrypt;
 
 public class PasswordHandler
 {
-  private static int workload = 12;
+  private static int workload = 8;
 
   public static String hashPassword(String password_plaintext)
   {
-    String salt = BCrypt.gensalt(workload);
-    String hashed_password = BCrypt.hashpw(password_plaintext, salt);
-    return (hashed_password);
+    return BCrypt.hashpw(password_plaintext, BCrypt.gensalt(workload));
   }
 
-  public static boolean checkPassword(String password_plaintext, String stored_hash)
+  public static boolean checkPassword(String password_plaintext, String password_encrypted)
   {
-    boolean password_verified = false;
-    if (null == stored_hash || !stored_hash.startsWith("$2a$")) throw new java.lang.IllegalArgumentException("Invalid hash provided for comparison");
-    password_verified = BCrypt.checkpw(password_plaintext, stored_hash);
-    return (password_verified);
+    if (password_encrypted == null || !password_encrypted.startsWith("$2a$"))
+      throw new java.lang.IllegalArgumentException("Invalid hash provided for comparison");
+    return BCrypt.checkpw(password_plaintext, password_encrypted);
   }
 }

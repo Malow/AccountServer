@@ -29,8 +29,15 @@ public class AccountHandler
       {
         String authToken = UUID.randomUUID().toString();
         acc.authToken = authToken;
-        acc.failedLoginAttempts = 0;
-        AccountAccessor.update(acc);
+        if (acc.failedLoginAttempts == 0)
+        {
+          AccountAccessor.updateCacheOnly(acc);
+        }
+        else
+        {
+          acc.failedLoginAttempts = 0;
+          AccountAccessor.update(acc);
+        }
         return new LoginResponse(true, authToken);
       }
       acc.failedLoginAttempts += 1;

@@ -1,4 +1,4 @@
-package com.github.malow.accountserver.tests;
+package com.github.malow.accountserver.manualtests;
 
 import static org.junit.Assert.assertEquals;
 
@@ -13,7 +13,7 @@ import com.github.malow.accountserver.TestHelpers;
 import com.github.malow.malowlib.MaloWProcess;
 import com.github.malow.malowlib.RandomNumberGenerator;
 
-public class StressTest
+public class MixedStressTest
 {
   private static final int THREAD_COUNT = 10;
   private static final int REQUESTS_PER_THREAD = 10;

@@ -4,23 +4,18 @@ import java.util.Scanner;
 
 import org.junit.Test;
 
+import com.github.malow.malowlib.network.https.HttpsPostServerConfig;
+
 public class AccountServerTest
 {
   @Test
   public void testRunningServer()
   {
-    AccountServerConfig config = new AccountServerConfig();
-    config.databaseName = "AccountServer";
-    config.databaseUser = "AccServUsr";
-    config.databasePassword = "password";
-    config.httpsApiCertPassword = "password";
-    config.httpsApiPort = 7000;
+    HttpsPostServerConfig httpsConfig = new HttpsPostServerConfig(7000, "https_key.jks", "password");
+    AccountServerConfig config = new AccountServerConfig("AccountServer", "AccServUsr", "password", httpsConfig, "gladiatormanager.noreply",
+        "passwordFU", "AccountServerTest");
 
     config.enableEmailSending = false;
-    config.gmailUsername = "gladiatormanager.noreply";
-    config.gmailPassword = "passwordFU";
-    config.appName = "AccountServerTest";
-
     config.allowClearCacheOperation = true;
 
     AccountServer.start(config);
