@@ -17,12 +17,6 @@
     </plugins>
   </build>
   
-  <repository>
-    <id>in-project</id>
-    <name>In Project Repo</name>
-    <url>file://${project.basedir}/libs</url>
-  </repository>
-  
   <dependencies>
   	<dependency>
       <groupId>com.github.malow</groupId>

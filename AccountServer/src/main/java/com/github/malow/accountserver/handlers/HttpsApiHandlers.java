@@ -7,8 +7,8 @@ import com.github.malow.accountserver.comstructs.account.LoginRequest;
 import com.github.malow.accountserver.comstructs.account.RegisterRequest;
 import com.github.malow.accountserver.comstructs.account.ResetPasswordRequest;
 import com.github.malow.accountserver.database.AccountAccessor;
+import com.github.malow.malowlib.GsonSingleton;
 import com.github.malow.malowlib.network.https.HttpsPostHandler;
-import com.google.gson.Gson;
 
 public class HttpsApiHandlers
 {
@@ -17,7 +17,7 @@ public class HttpsApiHandlers
     @Override
     public String handleRequestAndGetResponse(String request)
     {
-      return new Gson().toJson(new Response(true));
+      return GsonSingleton.get().toJson(new Response(true));
     }
   }
 
@@ -27,7 +27,7 @@ public class HttpsApiHandlers
     public String handleRequestAndGetResponse(String request)
     {
       AccountAccessor.clearCache();
-      return new Gson().toJson(new Response(true));
+      return GsonSingleton.get().toJson(new Response(true));
     }
   }
 
@@ -40,11 +40,11 @@ public class HttpsApiHandlers
       if (req != null)
       {
         Response resp = AccountHandler.login(req);
-        return new Gson().toJson(resp);
+        return GsonSingleton.get().toJson(resp);
       }
       else
       {
-        return new Gson().toJson(new ErrorResponse(false, "Request has wrong parameters"));
+        return GsonSingleton.get().toJson(new ErrorResponse(false, "Request has wrong parameters"));
       }
     }
   }
@@ -58,11 +58,11 @@ public class HttpsApiHandlers
       if (req != null)
       {
         Response resp = AccountHandler.register(req);
-        return new Gson().toJson(resp);
+        return GsonSingleton.get().toJson(resp);
       }
       else
       {
-        return new Gson().toJson(new ErrorResponse(false, "Request has wrong parameters"));
+        return GsonSingleton.get().toJson(new ErrorResponse(false, "Request has wrong parameters"));
       }
     }
   }
@@ -76,11 +76,11 @@ public class HttpsApiHandlers
       if (req != null)
       {
         Response resp = AccountHandler.sendPasswordResetToken(req);
-        return new Gson().toJson(resp);
+        return GsonSingleton.get().toJson(resp);
       }
       else
       {
-        return new Gson().toJson(new ErrorResponse(false, "Request has wrong parameters"));
+        return GsonSingleton.get().toJson(new ErrorResponse(false, "Request has wrong parameters"));
       }
     }
   }
@@ -94,11 +94,11 @@ public class HttpsApiHandlers
       if (req != null)
       {
         Response resp = AccountHandler.resetPassword(req);
-        return new Gson().toJson(resp);
+        return GsonSingleton.get().toJson(resp);
       }
       else
       {
-        return new Gson().toJson(new ErrorResponse(false, "Request has wrong parameters"));
+        return GsonSingleton.get().toJson(new ErrorResponse(false, "Request has wrong parameters"));
       }
     }
   }

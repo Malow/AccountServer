@@ -24,17 +24,15 @@ public class Database
     }
   }
 
-  private Connection connection = null;
-  private static final Database INSTANCE = new Database();
+  private static Connection connection = null;
 
   private Database()
   {
-    if (INSTANCE != null) { throw new IllegalStateException("Already instantiated"); }
   }
 
   public static Connection getConnection()
   {
-    return INSTANCE.connection;
+    return connection;
   }
 
   public static void init(String databaseName, String databaseUser, String databasePassword)
@@ -42,7 +40,7 @@ public class Database
     try
     {
       Class.forName("com.mysql.jdbc.Driver");
-      INSTANCE.connection = DriverManager.getConnection(
+      connection = DriverManager.getConnection(
           "jdbc:mysql://localhost/" + databaseName + "?user=" + databaseUser + "&password=" + databasePassword + "&autoReconnect=true");
     }
     catch (Exception e)
@@ -53,13 +51,17 @@ public class Database
 
   public static void close()
   {
-    if (INSTANCE.connection != null) try
+    if (connection != null)
     {
-      INSTANCE.connection.close();
-    }
-    catch (Exception e)
-    {
-      MaloWLogger.error("Error while trying to close SQL connection", e);
+      try
+      {
+        connection.close();
+      }
+      catch (Exception e)
+      {
+        MaloWLogger.error("Error while trying to close SQL connection", e);
+      }
+      connection = null;
     }
   }
 }

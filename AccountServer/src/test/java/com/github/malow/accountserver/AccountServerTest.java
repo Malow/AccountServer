@@ -12,6 +12,7 @@ public class AccountServerTest
   public void testRunningServer()
   {
     HttpsPostServerConfig httpsConfig = new HttpsPostServerConfig(7000, "https_key.jks", "password");
+    httpsConfig.useMultipleThreads = false;
     AccountServerConfig config = new AccountServerConfig("AccountServer", "AccServUsr", "password", httpsConfig, "gladiatormanager.noreply",
         "passwordFU", "AccountServerTest");
 

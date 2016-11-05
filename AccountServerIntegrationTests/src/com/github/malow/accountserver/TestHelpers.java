@@ -7,8 +7,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import com.github.malow.malowlib.GsonSingleton;
 import com.github.malow.malowlib.network.https.HttpsPostClient;
-import com.google.gson.Gson;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLNonTransientConnectionException;
 
 public class TestHelpers
@@ -28,7 +28,7 @@ public class TestHelpers
 
   public static <T> T fromJson(String json, Class<T> expectedClass)
   {
-    return new Gson().fromJson(json, expectedClass);
+    return GsonSingleton.get().fromJson(json, expectedClass);
   }
 
   public static void resetDatabaseTable(String tableName) throws Exception
