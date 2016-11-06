@@ -46,7 +46,6 @@ public class TestHelpers
 
   private static void doResetDatabaseTable(String tableName) throws Exception
   {
-    Class.forName("com.mysql.jdbc.Driver");
     Connection connection = DriverManager
         .getConnection("jdbc:mysql://localhost/AccountServer?" + "user=AccServUsr&password=password&autoReconnect=true");
     String sql = "DELETE FROM " + tableName + " ;";
@@ -57,7 +56,13 @@ public class TestHelpers
   private static void createDatabase() throws Exception
   {
     Connection connection = DriverManager.getConnection("jdbc:mysql://localhost?" + "user=AccServUsr&password=password&autoReconnect=true");
-    String file = new String(Files.readAllBytes(Paths.get("../CreateDatabaseExample.sql")));
+    runSqlStatementsFromFile(connection, "../CreateMysqlDatabase.sql");
+    runSqlStatementsFromFile(connection, "../CreateSqlTables.sql");
+  }
+
+  private static void runSqlStatementsFromFile(Connection connection, String pathToFile) throws Exception
+  {
+    String file = new String(Files.readAllBytes(Paths.get(pathToFile)));
     String[] statements = file.split("\\;");
     for (String statement : statements)
     {
@@ -67,14 +72,13 @@ public class TestHelpers
       }
       catch (Exception e2)
       {
-
+        throw e2;
       }
     }
   }
 
   public static String getPasswordResetTokenForEmail(String email) throws Exception
   {
-    Class.forName("com.mysql.jdbc.Driver");
     Connection connection = DriverManager
         .getConnection("jdbc:mysql://localhost/AccountServer?" + "user=AccServUsr&password=password&autoReconnect=true");
     PreparedStatement s1 = connection.prepareStatement("SELECT * FROM Accounts WHERE email = ? ; ");

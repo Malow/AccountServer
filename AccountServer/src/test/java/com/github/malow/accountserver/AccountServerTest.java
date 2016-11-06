@@ -9,7 +9,7 @@ import com.github.malow.malowlib.network.https.HttpsPostServerConfig;
 public class AccountServerTest
 {
   @Test
-  public void testRunningServer()
+  public void runForIntegrationTests()
   {
     HttpsPostServerConfig httpsConfig = new HttpsPostServerConfig(7000, "https_key.jks", "password");
     httpsConfig.useMultipleThreads = false;

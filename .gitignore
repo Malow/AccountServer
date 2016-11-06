@@ -1,6 +1,7 @@
 #MaloW
 */logs
 */target
+*.db
 
 # Created by https://www.gitignore.io/api/java,eclipse
 
