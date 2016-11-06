@@ -32,16 +32,17 @@ public class AccountServer
     EmailHandler.init(config.gmailUsername, config.gmailPassword, config.appName, config.enableEmailSending);
     Database.init(config.databaseName, config.databaseUser, config.databasePassword);
 
-    MaloWLogger.info("Starting " + config.appName + " in directory " + System.getProperty("user.dir") + " using port " + config.httpsConfig.port);
+    MaloWLogger.info("Starting AccountServer for " + config.appName + " in directory " + System.getProperty("user.dir") + " using port "
+        + config.httpsConfig.port);
     httpsServer = new HttpsPostServer(config.httpsConfig);
-    httpsServer.createContext(config.httpsConfig.testPath, new TestHandler());
-    httpsServer.createContext(config.httpsConfig.loginPath, new LoginHandler());
-    httpsServer.createContext(config.httpsConfig.registerPath, new RegisterHandler());
-    httpsServer.createContext(config.httpsConfig.sendPwResetTokenPath, new SendPasswordResetTokenHandler());
-    httpsServer.createContext(config.httpsConfig.resetPwPath, new ResetPasswordHandler());
+    httpsServer.createContext(config.testPath, new TestHandler());
+    httpsServer.createContext(config.loginPath, new LoginHandler());
+    httpsServer.createContext(config.registerPath, new RegisterHandler());
+    httpsServer.createContext(config.sendPwResetTokenPath, new SendPasswordResetTokenHandler());
+    httpsServer.createContext(config.resetPwPath, new ResetPasswordHandler());
     if (config.allowClearCacheOperation)
     {
-      httpsServer.createContext(config.httpsConfig.clearCachePath, new ClearCacheHandler());
+      httpsServer.createContext(config.clearCachePath, new ClearCacheHandler());
     }
     httpsServer.start();
   }

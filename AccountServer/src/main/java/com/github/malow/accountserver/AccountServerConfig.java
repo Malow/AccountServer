@@ -17,6 +17,13 @@ public class AccountServerConfig
   public boolean enableEmailSending = true;
   public boolean allowClearCacheOperation = false;
 
+  public String testPath = "/test";
+  public String loginPath = "/login";
+  public String registerPath = "/register";
+  public String sendPwResetTokenPath = "/sendpwresettoken";
+  public String resetPwPath = "/resetpw";
+  public String clearCachePath = "/clearcache";
+
   public AccountServerConfig(String databaseName, String databaseUser, String databasePassword, HttpsPostServerConfig httpsConfig,
       String gmailUsername, String gmailPassword, String appName)
   {
