@@ -10,9 +10,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.malow.accountserver.ServerConnection;
-import com.github.malow.accountserver.TestHelpers;
 import com.github.malow.accountserver.comstructs.account.LoginResponse;
+import com.github.malow.accountserver.testhelpers.ServerConnection;
+import com.github.malow.accountserver.testhelpers.TestHelpers;
+import com.github.malow.malowlib.GsonSingleton;
 import com.github.malow.malowlib.MaloWProcess;
 
 public class LoginStressTest
@@ -41,7 +42,7 @@ public class LoginStressTest
         try
         {
           String jsonResponse = ServerConnection.login(TEST_EMAIL, TEST_PASSWORD);
-          LoginResponse response = TestHelpers.fromJson(jsonResponse, LoginResponse.class);
+          LoginResponse response = GsonSingleton.get().fromJson(jsonResponse, LoginResponse.class);
 
           assertEquals(true, response.result);
           assertEquals(true, TestHelpers.isValidToken(response.authToken));

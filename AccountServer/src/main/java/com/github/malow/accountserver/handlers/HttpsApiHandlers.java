@@ -1,6 +1,5 @@
 package com.github.malow.accountserver.handlers;
 
-import com.github.malow.accountserver.comstructs.ErrorResponse;
 import com.github.malow.accountserver.comstructs.Request;
 import com.github.malow.accountserver.comstructs.Response;
 import com.github.malow.accountserver.comstructs.account.LoginRequest;
@@ -34,72 +33,44 @@ public class HttpsApiHandlers
   public static class LoginHandler extends HttpsPostHandler
   {
     @Override
-    public String handleRequestAndGetResponse(String request)
+    public String handleRequestAndGetResponse(String request) throws BadRequestException
     {
       LoginRequest req = (LoginRequest) createValidJsonRequest(request, LoginRequest.class);
-      if (req != null)
-      {
-        Response resp = AccountHandler.login(req);
-        return GsonSingleton.get().toJson(resp);
-      }
-      else
-      {
-        return GsonSingleton.get().toJson(new ErrorResponse(false, "Request has wrong parameters"));
-      }
+      Response resp = AccountHandler.login(req);
+      return GsonSingleton.get().toJson(resp);
     }
   }
 
   public static class RegisterHandler extends HttpsPostHandler
   {
     @Override
-    public String handleRequestAndGetResponse(String request)
+    public String handleRequestAndGetResponse(String request) throws BadRequestException
     {
       RegisterRequest req = (RegisterRequest) createValidJsonRequest(request, RegisterRequest.class);
-      if (req != null)
-      {
-        Response resp = AccountHandler.register(req);
-        return GsonSingleton.get().toJson(resp);
-      }
-      else
-      {
-        return GsonSingleton.get().toJson(new ErrorResponse(false, "Request has wrong parameters"));
-      }
+      Response resp = AccountHandler.register(req);
+      return GsonSingleton.get().toJson(resp);
     }
   }
 
   public static class SendPasswordResetTokenHandler extends HttpsPostHandler
   {
     @Override
-    public String handleRequestAndGetResponse(String request)
+    public String handleRequestAndGetResponse(String request) throws BadRequestException
     {
       Request req = (Request) createValidJsonRequest(request, Request.class);
-      if (req != null)
-      {
-        Response resp = AccountHandler.sendPasswordResetToken(req);
-        return GsonSingleton.get().toJson(resp);
-      }
-      else
-      {
-        return GsonSingleton.get().toJson(new ErrorResponse(false, "Request has wrong parameters"));
-      }
+      Response resp = AccountHandler.sendPasswordResetToken(req);
+      return GsonSingleton.get().toJson(resp);
     }
   }
 
   public static class ResetPasswordHandler extends HttpsPostHandler
   {
     @Override
-    public String handleRequestAndGetResponse(String request)
+    public String handleRequestAndGetResponse(String request) throws BadRequestException
     {
       ResetPasswordRequest req = (ResetPasswordRequest) createValidJsonRequest(request, ResetPasswordRequest.class);
-      if (req != null)
-      {
-        Response resp = AccountHandler.resetPassword(req);
-        return GsonSingleton.get().toJson(resp);
-      }
-      else
-      {
-        return GsonSingleton.get().toJson(new ErrorResponse(false, "Request has wrong parameters"));
-      }
+      Response resp = AccountHandler.resetPassword(req);
+      return GsonSingleton.get().toJson(resp);
     }
   }
 }

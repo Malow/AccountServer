@@ -1,4 +1,4 @@
-package com.github.malow.accountserver.tests;
+package com.github.malow.accountserver.regressiontests;
 
 import static org.junit.Assert.assertEquals;
 
@@ -6,10 +6,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.github.malow.accountserver.ErrorMessages;
-import com.github.malow.accountserver.ServerConnection;
-import com.github.malow.accountserver.TestHelpers;
 import com.github.malow.accountserver.comstructs.ErrorResponse;
 import com.github.malow.accountserver.comstructs.account.LoginResponse;
+import com.github.malow.accountserver.testhelpers.ServerConnection;
+import com.github.malow.accountserver.testhelpers.TestHelpers;
+import com.github.malow.malowlib.GsonSingleton;
 
 public class LoginTests
 {
@@ -29,7 +30,7 @@ public class LoginTests
     ServerConnection.register(TEST_EMAIL, TEST_USERNAME, TEST_PASSWORD);
 
     String jsonResponse = ServerConnection.login(TEST_EMAIL, TEST_PASSWORD);
-    LoginResponse response = TestHelpers.fromJson(jsonResponse, LoginResponse.class);
+    LoginResponse response = GsonSingleton.get().fromJson(jsonResponse, LoginResponse.class);
 
     assertEquals(true, response.result);
     assertEquals(true, TestHelpers.isValidToken(response.authToken));
@@ -41,7 +42,7 @@ public class LoginTests
     ServerConnection.register(TEST_EMAIL, TEST_USERNAME, TEST_PASSWORD);
 
     String jsonResponse = ServerConnection.login(TEST_EMAIL, TEST_PASSWORD + "a");
-    ErrorResponse response = TestHelpers.fromJson(jsonResponse, ErrorResponse.class);
+    ErrorResponse response = GsonSingleton.get().fromJson(jsonResponse, ErrorResponse.class);
 
     assertEquals(false, response.result);
     assertEquals(ErrorMessages.WRONG_PASSWORD, response.error);
@@ -51,7 +52,7 @@ public class LoginTests
   public void loginWithUnregisteredEmailTest() throws Exception
   {
     String jsonResponse = ServerConnection.login(TEST_EMAIL, TEST_PASSWORD);
-    ErrorResponse response = TestHelpers.fromJson(jsonResponse, ErrorResponse.class);
+    ErrorResponse response = GsonSingleton.get().fromJson(jsonResponse, ErrorResponse.class);
 
     assertEquals(false, response.result);
     assertEquals(ErrorMessages.EMAIL_NOT_REGISTERED, response.error);

@@ -16,6 +16,7 @@ public class CreateDatabase
     runSqlStatementsFromFile(connection, "../CreateSqlTables.sql");
   }
 
+  @SuppressWarnings("unused")
   private static void createSqlite3Database() throws Exception
   {
     Connection connection = DriverManager.getConnection("jdbc:sqlite:../AccountServer.db");
@@ -43,6 +44,6 @@ public class CreateDatabase
   public void createDatabaseTest() throws Exception
   {
     createMysqlDatabase();
-    createSqlite3Database();
+    //createSqlite3Database();
   }
 }

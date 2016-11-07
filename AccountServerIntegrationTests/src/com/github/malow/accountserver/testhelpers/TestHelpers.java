@@ -1,4 +1,4 @@
-package com.github.malow.accountserver;
+package com.github.malow.accountserver.testhelpers;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -7,15 +7,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import com.github.malow.malowlib.GsonSingleton;
-import com.github.malow.malowlib.network.https.HttpsPostClient;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLNonTransientConnectionException;
 
 public class TestHelpers
 {
   public static void beforeTest() throws Exception
   {
-    HttpsPostClient.setHost(Config.HOST);
     resetDatabaseTable("accounts");
     ServerConnection.clearCache();
   }
@@ -24,11 +21,6 @@ public class TestHelpers
   {
     if (token != null && token.length() > 0) { return true; }
     return false;
-  }
-
-  public static <T> T fromJson(String json, Class<T> expectedClass)
-  {
-    return GsonSingleton.get().fromJson(json, expectedClass);
   }
 
   public static void resetDatabaseTable(String tableName) throws Exception

@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.github.malow.malowlib.network.https.HttpsPostServerConfig;
 
-public class AccountServerTest
+public class AccountServerForTests
 {
   @Test
   public void runForIntegrationTests()

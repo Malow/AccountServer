@@ -8,8 +8,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.malow.accountserver.ServerConnection;
-import com.github.malow.accountserver.TestHelpers;
+import com.github.malow.accountserver.testhelpers.ServerConnection;
+import com.github.malow.accountserver.testhelpers.TestHelpers;
 import com.github.malow.malowlib.MaloWProcess;
 import com.github.malow.malowlib.RandomNumberGenerator;
 

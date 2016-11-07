@@ -1,4 +1,4 @@
-package com.github.malow.accountserver;
+package com.github.malow.accountserver.testhelpers;
 
 import com.github.malow.accountserver.comstructs.Request;
 import com.github.malow.accountserver.comstructs.account.LoginRequest;
