@@ -22,6 +22,12 @@ public class Database
     {
       return this.error;
     }
+
+    @Override
+    public String getMessage()
+    {
+      return this.error;
+    }
   }
 
   private static Connection connection = null;
