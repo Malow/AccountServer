@@ -4,7 +4,7 @@ import com.github.malow.malowlib.network.https.HttpsPostClient;
 
 public class ServerConnection
 {
-  public static HttpsPostClient httpsPostClient = new HttpsPostClient(Config.HOST);
+  public static HttpsPostClient httpsPostClient = new HttpsPostClient(Config.HOST, true);
 
   public static String register(String email, String username, String password) throws Exception
   {
