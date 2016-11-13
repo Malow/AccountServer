@@ -1,5 +1,6 @@
 package com.github.malow.accountserver.testhelpers;
 
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
@@ -19,7 +20,7 @@ public class TestHelpers
 
   public static boolean isValidToken(String token)
   {
-    if (token != null && token.length() > 0) { return true; }
+    if ((token != null) && (token.length() > 0)) return true;
     return false;
   }
 
@@ -38,23 +39,26 @@ public class TestHelpers
 
   private static void doResetDatabaseTable(String tableName) throws Exception
   {
-    Connection connection = DriverManager
-        .getConnection("jdbc:mysql://localhost/AccountServer?" + "user=AccServUsr&password=password&autoReconnect=true");
     String sql = "DELETE FROM " + tableName + " ;";
-    PreparedStatement s1 = connection.prepareStatement(sql);
-    s1.execute();
+    try (PreparedStatement s1 = DriverManager
+        .getConnection("jdbc:mysql://localhost/AccountServer?" + "user=AccServUsr&password=password&autoReconnect=true").prepareStatement(sql))
+    {
+      s1.execute();
+    }
   }
 
   private static void createDatabase() throws Exception
   {
-    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost?" + "user=AccServUsr&password=password&autoReconnect=true");
-    runSqlStatementsFromFile(connection, "../CreateMysqlDatabase.sql");
-    runSqlStatementsFromFile(connection, "../CreateSqlTables.sql");
+    try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost?" + "user=AccServUsr&password=password&autoReconnect=true"))
+    {
+      runSqlStatementsFromFile(connection, "../CreateMysqlDatabase.sql");
+      runSqlStatementsFromFile(connection, "../CreateSqlTables.sql");
+    }
   }
 
   private static void runSqlStatementsFromFile(Connection connection, String pathToFile) throws Exception
   {
-    String file = new String(Files.readAllBytes(Paths.get(pathToFile)));
+    String file = new String(Files.readAllBytes(Paths.get(pathToFile)), StandardCharsets.UTF_8);
     String[] statements = file.split("\\;");
     for (String statement : statements)
     {
@@ -71,13 +75,16 @@ public class TestHelpers
 
   public static String getPasswordResetTokenForEmail(String email) throws Exception
   {
-    Connection connection = DriverManager
-        .getConnection("jdbc:mysql://localhost/AccountServer?" + "user=AccServUsr&password=password&autoReconnect=true");
-    PreparedStatement s1 = connection.prepareStatement("SELECT * FROM Accounts WHERE email = ? ; ");
-    s1.setString(1, email);
-    ResultSet s1Res = s1.executeQuery();
-
-    if (s1Res.next()) { return s1Res.getString("pw_reset_token"); }
-    return null;
+    try (PreparedStatement s1 = DriverManager
+        .getConnection("jdbc:mysql://localhost/AccountServer?" + "user=AccServUsr&password=password&autoReconnect=true")
+        .prepareStatement("SELECT * FROM Accounts WHERE email = ? ; "))
+    {
+      s1.setString(1, email);
+      try (ResultSet s1Res = s1.executeQuery())
+      {
+        if (s1Res.next()) return s1Res.getString("pw_reset_token");
+        return null;
+      }
+    }
   }
 }

@@ -38,25 +38,23 @@ public class AccountAccessor
   {
     Account a = cacheByEmail.get(email);
     if (a != null) return a;
-    try
+    try (PreparedStatement s1 = Database.getConnection().prepareStatement("SELECT * FROM Accounts WHERE email = ? ; "))
     {
-      PreparedStatement s1 = Database.getConnection().prepareStatement("SELECT * FROM Accounts WHERE email = ? ; ");
       s1.setString(1, email);
-      ResultSet s1Res = s1.executeQuery();
-
-      if (s1Res.next())
+      try (ResultSet s1Res = s1.executeQuery())
       {
-        Long id = s1Res.getLong("id");
-        String username = s1Res.getString("username");
-        String password = s1Res.getString("password");
-        String pwResetToken = s1Res.getString("pw_reset_token");
-        int failedLoginAttempts = s1Res.getInt("failed_login_attempts");
+        if (s1Res.next())
+        {
+          Long id = s1Res.getLong("id");
+          String username = s1Res.getString("username");
+          String password = s1Res.getString("password");
+          String pwResetToken = s1Res.getString("pw_reset_token");
+          int failedLoginAttempts = s1Res.getInt("failed_login_attempts");
 
-        Account acc = new Account(id, username, password, email, pwResetToken, failedLoginAttempts, null);
-        s1Res.close();
-        s1.close();
-        cacheByEmail.put(acc.email, acc);
-        return acc;
+          Account acc = new Account(id, username, password, email, pwResetToken, failedLoginAttempts, null);
+          cacheByEmail.put(acc.email, acc);
+          return acc;
+        }
       }
     }
     catch (Exception e)
@@ -70,10 +68,9 @@ public class AccountAccessor
 
   public static boolean create(Account acc) throws UnexpectedException, EmailAlreadyExistsException, UsernameAlreadyExistsException
   {
-    try
+    try (PreparedStatement s = Database.getConnection().prepareStatement("insert into Accounts values (default, ?, ?, ?, ?, ?);",
+        Statement.RETURN_GENERATED_KEYS))
     {
-      PreparedStatement s = Database.getConnection().prepareStatement("insert into Accounts values (default, ?, ?, ?, ?, ?);",
-          Statement.RETURN_GENERATED_KEYS);
       int i = 1;
       s.setString(i++, acc.username);
       s.setString(i++, acc.password);
@@ -81,13 +78,14 @@ public class AccountAccessor
       s.setString(i++, acc.pwResetToken);
       s.setInt(i++, acc.failedLoginAttempts);
       int rowCount = s.executeUpdate();
-      ResultSet generatedKeys = s.getGeneratedKeys();
-      if (rowCount != 0 && generatedKeys.next())
+      try (ResultSet generatedKeys = s.getGeneratedKeys())
       {
-        acc.id = generatedKeys.getLong(1);
-        s.close();
-        cacheByEmail.put(acc.email, acc);
-        return true;
+        if ((rowCount != 0) && generatedKeys.next())
+        {
+          acc.id = generatedKeys.getLong(1);
+          cacheByEmail.put(acc.email, acc);
+          return true;
+        }
       }
     }
     catch (MySQLIntegrityConstraintViolationException e)
@@ -112,10 +110,9 @@ public class AccountAccessor
 
   public static boolean update(Account acc) throws UnexpectedException, AccountNotFoundException
   {
-    try
+    try (PreparedStatement s1 = Database.getConnection()
+        .prepareStatement("UPDATE Accounts SET username = ?, password = ?, email = ?, pw_reset_token = ?, failed_login_attempts = ? WHERE id = ?;"))
     {
-      PreparedStatement s1 = Database.getConnection()
-          .prepareStatement("UPDATE Accounts SET username = ?, password = ?, email = ?, pw_reset_token = ?, failed_login_attempts = ? WHERE id = ?;");
       int i = 1;
       s1.setString(i++, acc.username);
       s1.setString(i++, acc.password);
@@ -124,7 +121,6 @@ public class AccountAccessor
       s1.setInt(i++, acc.failedLoginAttempts);
       s1.setLong(i++, acc.id);
       int rowCount = s1.executeUpdate();
-      s1.close();
 
       if (rowCount == 1)
       {
@@ -144,16 +140,16 @@ public class AccountAccessor
   // Optimized specific methods
   public static boolean setPasswordResetToken(String email, String pwResetToken) throws UnexpectedException, AccountNotFoundException
   {
-    try
+    try (PreparedStatement s1 = Database.getConnection().prepareStatement("UPDATE Accounts SET pw_reset_token = ? WHERE email = ?;"))
     {
-      PreparedStatement s1 = Database.getConnection().prepareStatement("UPDATE Accounts SET pw_reset_token = ? WHERE email = ?;");
-      s1.setString(1, pwResetToken);
-      s1.setString(2, email);
+      int i = 1;
+      s1.setString(i++, pwResetToken);
+      s1.setString(i++, email);
       int rowCount = s1.executeUpdate();
-      s1.close();
 
       if (rowCount == 1)
       {
+        // PROBLEM: cacheByEmail get -> put isn't atomic. Another thread might've modified the object between get and put which will make this overwrite that.
         Account cachedAccount = cacheByEmail.get(email);
         if (cachedAccount != null)
         {
@@ -175,14 +171,14 @@ public class AccountAccessor
   public static boolean checkAuthToken(String email, String authToken)
   {
     Account acc = cacheByEmail.get(email);
-    if (acc != null && acc.authToken.equals(authToken)) return true;
+    if ((acc != null) && acc.authToken.equals(authToken)) return true;
     return false;
   }
 
   public static Long checkAuthTokenAndGetAccId(String email, String authToken) throws WrongAuthentificationTokenException
   {
     Account acc = cacheByEmail.get(email);
-    if (acc != null && acc.authToken.equals(authToken)) return acc.id;
+    if ((acc != null) && acc.authToken.equals(authToken)) return acc.id;
     throw new WrongAuthentificationTokenException();
   }
 

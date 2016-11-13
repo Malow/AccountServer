@@ -1,5 +1,6 @@
 package com.github.malow.accountserver;
 
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
@@ -25,7 +26,7 @@ public class CreateDatabase
 
   private static void runSqlStatementsFromFile(Connection connection, String pathToFile) throws Exception
   {
-    String file = new String(Files.readAllBytes(Paths.get(pathToFile)));
+    String file = new String(Files.readAllBytes(Paths.get(pathToFile)), StandardCharsets.UTF_8);
     String[] statements = file.split("\\;");
     for (String statement : statements)
     {
