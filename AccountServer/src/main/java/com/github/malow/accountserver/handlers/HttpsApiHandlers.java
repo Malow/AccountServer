@@ -16,7 +16,7 @@ public class HttpsApiHandlers
     @Override
     public String handleRequestAndGetResponse(String request)
     {
-      return GsonSingleton.get().toJson(new Response(true));
+      return GsonSingleton.toJson(new Response(true));
     }
   }
 
@@ -26,7 +26,7 @@ public class HttpsApiHandlers
     public String handleRequestAndGetResponse(String request)
     {
       AccountAccessor.clearCache();
-      return GsonSingleton.get().toJson(new Response(true));
+      return GsonSingleton.toJson(new Response(true));
     }
   }
 
@@ -37,7 +37,7 @@ public class HttpsApiHandlers
     {
       LoginRequest req = (LoginRequest) createValidJsonRequest(request, LoginRequest.class);
       Response resp = AccountHandler.login(req);
-      return GsonSingleton.get().toJson(resp);
+      return GsonSingleton.toJson(resp);
     }
   }
 
@@ -48,7 +48,7 @@ public class HttpsApiHandlers
     {
       RegisterRequest req = (RegisterRequest) createValidJsonRequest(request, RegisterRequest.class);
       Response resp = AccountHandler.register(req);
-      return GsonSingleton.get().toJson(resp);
+      return GsonSingleton.toJson(resp);
     }
   }
 
@@ -59,7 +59,7 @@ public class HttpsApiHandlers
     {
       Request req = (Request) createValidJsonRequest(request, Request.class);
       Response resp = AccountHandler.sendPasswordResetToken(req);
-      return GsonSingleton.get().toJson(resp);
+      return GsonSingleton.toJson(resp);
     }
   }
 
@@ -70,7 +70,7 @@ public class HttpsApiHandlers
     {
       ResetPasswordRequest req = (ResetPasswordRequest) createValidJsonRequest(request, ResetPasswordRequest.class);
       Response resp = AccountHandler.resetPassword(req);
-      return GsonSingleton.get().toJson(resp);
+      return GsonSingleton.toJson(resp);
     }
   }
 }

@@ -42,7 +42,7 @@ public class LoginStressTest
         try
         {
           String jsonResponse = ServerConnection.login(TEST_EMAIL, TEST_PASSWORD);
-          LoginResponse response = GsonSingleton.get().fromJson(jsonResponse, LoginResponse.class);
+          LoginResponse response = GsonSingleton.fromJson(jsonResponse, LoginResponse.class);
 
           assertEquals(true, response.result);
           assertEquals(true, TestHelpers.isValidToken(response.authToken));

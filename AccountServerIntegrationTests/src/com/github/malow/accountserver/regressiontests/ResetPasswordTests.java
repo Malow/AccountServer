@@ -33,7 +33,7 @@ public class ResetPasswordTests
     String passwordResetToken = TestHelpers.getPasswordResetTokenForEmail(TEST_EMAIL);
 
     String jsonResponse = ServerConnection.resetPassword(TEST_EMAIL, TEST_NEW_PASSWORD, passwordResetToken);
-    LoginResponse response = GsonSingleton.get().fromJson(jsonResponse, LoginResponse.class);
+    LoginResponse response = GsonSingleton.fromJson(jsonResponse, LoginResponse.class);
 
     assertEquals(true, response.result);
     assertEquals(true, TestHelpers.isValidToken(response.authToken));
@@ -43,7 +43,7 @@ public class ResetPasswordTests
   public void resetPasswordWithUnregisteredEmailTest() throws Exception
   {
     String jsonResponse = ServerConnection.resetPassword(TEST_EMAIL, TEST_NEW_PASSWORD, "asd");
-    ErrorResponse response = GsonSingleton.get().fromJson(jsonResponse, ErrorResponse.class);
+    ErrorResponse response = GsonSingleton.fromJson(jsonResponse, ErrorResponse.class);
 
     assertEquals(false, response.result);
     assertEquals(ErrorMessages.EMAIL_NOT_REGISTERED, response.error);
@@ -54,7 +54,7 @@ public class ResetPasswordTests
   {
     ServerConnection.register(TEST_EMAIL, TEST_USERNAME, TEST_PASSWORD);
     String jsonResponse = ServerConnection.resetPassword(TEST_EMAIL, TEST_NEW_PASSWORD, "asd");
-    ErrorResponse response = GsonSingleton.get().fromJson(jsonResponse, ErrorResponse.class);
+    ErrorResponse response = GsonSingleton.fromJson(jsonResponse, ErrorResponse.class);
 
     assertEquals(false, response.result);
     assertEquals(ErrorMessages.BAD_PW_RESET_TOKEN, response.error);

@@ -30,7 +30,7 @@ public class SendPasswordResetTokenTests
     ServerConnection.register(TEST_EMAIL, TEST_USERNAME, TEST_PASSWORD);
 
     String jsonResponse = ServerConnection.sendPasswordResetToken(TEST_EMAIL);
-    Response response = GsonSingleton.get().fromJson(jsonResponse, Response.class);
+    Response response = GsonSingleton.fromJson(jsonResponse, Response.class);
 
     assertEquals(true, response.result);
     assertEquals(true, TestHelpers.isValidToken(TestHelpers.getPasswordResetTokenForEmail(TEST_EMAIL)));
@@ -40,7 +40,7 @@ public class SendPasswordResetTokenTests
   public void sendPasswordResetTokenWithUnregisteredEmailTest() throws Exception
   {
     String jsonResponse = ServerConnection.sendPasswordResetToken(TEST_EMAIL);
-    ErrorResponse response = GsonSingleton.get().fromJson(jsonResponse, ErrorResponse.class);
+    ErrorResponse response = GsonSingleton.fromJson(jsonResponse, ErrorResponse.class);
 
     assertEquals(false, response.result);
     assertEquals(ErrorMessages.EMAIL_NOT_REGISTERED, response.error);

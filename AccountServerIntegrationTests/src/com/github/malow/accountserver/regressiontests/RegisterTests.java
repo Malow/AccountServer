@@ -28,7 +28,7 @@ public class RegisterTests
   public void registerSucessfullyTest() throws Exception
   {
     String jsonResponse = ServerConnection.register(TEST_EMAIL, TEST_USERNAME, TEST_PASSWORD);
-    LoginResponse response = GsonSingleton.get().fromJson(jsonResponse, LoginResponse.class);
+    LoginResponse response = GsonSingleton.fromJson(jsonResponse, LoginResponse.class);
 
     assertEquals(true, response.result);
     assertEquals(true, TestHelpers.isValidToken(response.authToken));
@@ -40,7 +40,7 @@ public class RegisterTests
     ServerConnection.register(TEST_EMAIL, TEST_USERNAME, TEST_PASSWORD);
 
     String jsonResponse = ServerConnection.register(TEST_EMAIL, TEST_USERNAME + "a", TEST_PASSWORD);
-    ErrorResponse response = GsonSingleton.get().fromJson(jsonResponse, ErrorResponse.class);
+    ErrorResponse response = GsonSingleton.fromJson(jsonResponse, ErrorResponse.class);
 
     assertEquals(false, response.result);
     assertEquals(ErrorMessages.EMAIL_TAKEN, response.error);
@@ -52,7 +52,7 @@ public class RegisterTests
     ServerConnection.register(TEST_EMAIL, TEST_USERNAME, TEST_PASSWORD);
 
     String jsonResponse = ServerConnection.register(TEST_EMAIL + "a", TEST_USERNAME, TEST_PASSWORD);
-    ErrorResponse response = GsonSingleton.get().fromJson(jsonResponse, ErrorResponse.class);
+    ErrorResponse response = GsonSingleton.fromJson(jsonResponse, ErrorResponse.class);
 
     assertEquals(false, response.result);
     assertEquals(ErrorMessages.USERNAME_TAKEN, response.error);
