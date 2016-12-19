@@ -59,8 +59,7 @@ public class AccountAccessor
     }
     catch (Exception e)
     {
-      UnexpectedException ue = new UnexpectedException(e.toString());
-      ue.setStackTrace(e.getStackTrace());
+      UnexpectedException ue = new UnexpectedException("Unexpected error while trying to read account.", e);
       throw ue;
     }
     throw new AccountNotFoundException();
@@ -88,22 +87,12 @@ public class AccountAccessor
         }
       }
     }
-    catch (MySQLIntegrityConstraintViolationException e)
-    {
-      if (e.toString().contains("'email'")) throw new EmailAlreadyExistsException();
-      else if (e.toString().contains("'username'")) throw new UsernameAlreadyExistsException();
-      else
-      {
-        UnexpectedException ue = new UnexpectedException(e.toString());
-        ue.setStackTrace(e.getStackTrace());
-        throw ue;
-      }
-    }
     catch (Exception e)
     {
-      UnexpectedException ue = new UnexpectedException(e.toString());
-      ue.setStackTrace(e.getStackTrace());
-      throw ue;
+      if ((e instanceof MySQLIntegrityConstraintViolationException) && e.toString().contains("'email'")) throw new EmailAlreadyExistsException();
+      else if ((e instanceof MySQLIntegrityConstraintViolationException) && e.toString().contains("'username'"))
+        throw new UsernameAlreadyExistsException();
+      else throw new UnexpectedException("Unexpected Exception while trying to create account", e);
     }
     throw new UnexpectedException("Error while trying to create account, rowcount was 0 or no id could be found.");
   }
@@ -130,9 +119,7 @@ public class AccountAccessor
     }
     catch (Exception e)
     {
-      UnexpectedException ue = new UnexpectedException(e.toString());
-      ue.setStackTrace(e.getStackTrace());
-      throw ue;
+      throw new UnexpectedException("Unexpected Exception while updating account. ", e);
     }
     throw new AccountNotFoundException();
   }
@@ -161,9 +148,7 @@ public class AccountAccessor
     }
     catch (Exception e)
     {
-      UnexpectedException ue = new UnexpectedException(e.toString());
-      ue.setStackTrace(e.getStackTrace());
-      throw ue;
+      throw new UnexpectedException("Unexpected Exception while setting PasswordResetToken.", e);
     }
     throw new AccountNotFoundException();
   }

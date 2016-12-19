@@ -9,24 +9,16 @@ public class Database
 {
   public static class UnexpectedException extends Exception
   {
-    private static final long serialVersionUID = 1L;
-    public String error = null;
+    private static final long serialVersionUID = -3779400709345132187L;
+
+    public UnexpectedException(String error, Exception e)
+    {
+      super(error, e);
+    }
 
     public UnexpectedException(String error)
     {
-      this.error = error;
-    }
-
-    @Override
-    public String toString()
-    {
-      return this.error;
-    }
-
-    @Override
-    public String getMessage()
-    {
-      return this.error;
+      super(error);
     }
   }
 
