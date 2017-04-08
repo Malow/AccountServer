@@ -10,8 +10,8 @@ import org.junit.Test;
 
 import com.github.malow.accountserver.testhelpers.ServerConnection;
 import com.github.malow.accountserver.testhelpers.TestHelpers;
-import com.github.malow.malowlib.MaloWProcess;
 import com.github.malow.malowlib.RandomNumberGenerator;
+import com.github.malow.malowlib.malowprocess.MaloWProcess;
 
 public class MixedStressTest
 {
