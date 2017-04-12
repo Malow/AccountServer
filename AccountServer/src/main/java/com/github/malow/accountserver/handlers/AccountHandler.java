@@ -51,7 +51,7 @@ public class AccountHandler
     catch (UnexpectedException e)
     {
       MaloWLogger.error("Unexpected error when trying to login", e);
-      return new ErrorResponse(false, "Unexpected error");
+      return new ErrorResponse(false, ErrorMessages.UNEXPECTED_ERROR);
     }
   }
 
@@ -83,12 +83,12 @@ public class AccountHandler
     catch (UnexpectedException e)
     {
       MaloWLogger.error("Unexpected Database error when trying to register", e);
-      return new ErrorResponse(false, "Unexpected error");
+      return new ErrorResponse(false, ErrorMessages.UNEXPECTED_ERROR);
     }
     catch (Exception e)
     {
       MaloWLogger.error("Unexpected exception when trying to register", e);
-      return new ErrorResponse(false, "Unexpected error");
+      return new ErrorResponse(false, ErrorMessages.UNEXPECTED_ERROR);
     }
   }
 
@@ -108,7 +108,7 @@ public class AccountHandler
     catch (UnexpectedException e)
     {
       MaloWLogger.error("Unexpected error when trying to sendPasswordResetToken", e);
-      return new ErrorResponse(false, "Unexpected error");
+      return new ErrorResponse(false, ErrorMessages.UNEXPECTED_ERROR);
     }
   }
 
@@ -135,7 +135,7 @@ public class AccountHandler
     catch (UnexpectedException e)
     {
       MaloWLogger.error("Unexpected error when trying to resetPassword: ", e);
-      return new ErrorResponse(false, "Unexpected error");
+      return new ErrorResponse(false, ErrorMessages.UNEXPECTED_ERROR);
     }
   }
 }
