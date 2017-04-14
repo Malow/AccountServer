@@ -1,6 +1,7 @@
 package com.github.malow.accountserver.manualtests;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -14,12 +15,13 @@ import com.github.malow.accountserver.comstructs.account.LoginResponse;
 import com.github.malow.accountserver.testhelpers.ServerConnection;
 import com.github.malow.accountserver.testhelpers.TestHelpers;
 import com.github.malow.malowlib.GsonSingleton;
+import com.github.malow.malowlib.MaloWLogger;
 import com.github.malow.malowlib.malowprocess.MaloWProcess;
 
 public class LoginStressTest
 {
   private static final int THREAD_COUNT = 10;
-  private static final int REQUESTS_PER_THREAD = 10;
+  private static final int REQUESTS_PER_THREAD = 100;
   private static final String TEST_PASSWORD = "testerpw";
   private static final String TEST_USERNAME = "tester";
   private static final String TEST_EMAIL = "tester@test.com";
@@ -44,14 +46,14 @@ public class LoginStressTest
           String jsonResponse = ServerConnection.login(TEST_EMAIL, TEST_PASSWORD);
           LoginResponse response = GsonSingleton.fromJson(jsonResponse, LoginResponse.class);
 
-          assertEquals(true, response.result);
-          assertEquals(true, TestHelpers.isValidToken(response.authToken));
+          assertThat(response.result).isTrue();
+          assertThat(TestHelpers.isValidToken(response.authToken)).isTrue();
           progress.incrementAndGet();
         }
         catch (Exception e)
         {
-          e.printStackTrace();
-          assertEquals(true, false);
+          MaloWLogger.error("Failed.", e);
+          fail(e.getMessage());
         }
       }
     }
@@ -88,8 +90,7 @@ public class LoginStressTest
           done = false;
         }
       }
-      System.out.println("Progress: " + df.format((progress.doubleValue() / (THREAD_COUNT * REQUESTS_PER_THREAD)) * 100) + "%");
+      System.out.println("Progress: " + df.format(progress.doubleValue() / (THREAD_COUNT * REQUESTS_PER_THREAD) * 100) + "%");
     }
-    assertEquals(true, true);
   }
 }

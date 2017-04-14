@@ -1,10 +1,11 @@
 package com.github.malow.accountserver;
 
+import com.github.malow.malowlib.database.DatabaseConnection;
 import com.github.malow.malowlib.network.https.HttpsPostServerConfig;
 
 public class AccountServerConfig
 {
-  public String databaseName;
+  public DatabaseConnection databaseConnection;
   public String databaseUser;
   public String databasePassword;
 
@@ -24,12 +25,10 @@ public class AccountServerConfig
   public String resetPwPath = "/resetpw";
   public String clearCachePath = "/clearcache";
 
-  public AccountServerConfig(String databaseName, String databaseUser, String databasePassword, HttpsPostServerConfig httpsConfig,
-      String gmailUsername, String gmailPassword, String appName)
+  public AccountServerConfig(DatabaseConnection databaseConnection, HttpsPostServerConfig httpsConfig, String gmailUsername, String gmailPassword,
+      String appName)
   {
-    this.databaseName = databaseName;
-    this.databaseUser = databaseUser;
-    this.databasePassword = databasePassword;
+    this.databaseConnection = databaseConnection;
     this.httpsConfig = httpsConfig;
     this.gmailUsername = gmailUsername;
     this.gmailPassword = gmailPassword;

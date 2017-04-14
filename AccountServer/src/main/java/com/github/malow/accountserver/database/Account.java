@@ -1,31 +1,20 @@
 package com.github.malow.accountserver.database;
 
-public class Account
+import com.github.malow.malowlib.database.DatabaseTableEntity;
+
+public class Account extends DatabaseTableEntity
 {
   // Persisted in database
-  public Long id;
+  @Unique
   public String username;
   public String password;
+  @Unique
   public String email;
+  @Optional
   public String pwResetToken;
-  public Integer failedLoginAttempts;
+  public Integer failedLoginAttempts = 0;
 
   // Only cached in memory
+  @NotPersisted
   public String authToken;
-
-  public Account()
-  {
-
-  }
-
-  public Account(Long id, String username, String password, String email, String pwResetToken, Integer failedLoginAttempts, String authToken)
-  {
-    this.id = id;
-    this.username = username;
-    this.password = password;
-    this.email = email;
-    this.pwResetToken = pwResetToken;
-    this.failedLoginAttempts = failedLoginAttempts;
-    this.authToken = authToken;
-  }
 }

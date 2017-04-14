@@ -1,23 +1,27 @@
 package com.github.malow.accountserver.manualtests;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import com.github.malow.accountserver.testhelpers.ServerConnection;
 import com.github.malow.accountserver.testhelpers.TestHelpers;
+import com.github.malow.malowlib.MaloWLogger;
 import com.github.malow.malowlib.RandomNumberGenerator;
 import com.github.malow.malowlib.malowprocess.MaloWProcess;
 
 public class MixedStressTest
 {
   private static final int THREAD_COUNT = 10;
-  private static final int REQUESTS_PER_THREAD = 10;
+  private static final int REQUESTS_PER_THREAD = 100;
   private static final String[] RANDOM_STRINGS = { "A", "B", "C", "D" };
+  private static AtomicInteger progress;
 
   private static String getRandomString()
   {
@@ -76,13 +80,13 @@ public class MixedStressTest
           {
             doResetPassword();
           }
+          progress.incrementAndGet();
         }
       }
       catch (Exception e)
       {
-        System.out.println("Error: " + e.toString());
-        e.printStackTrace();
-        assertEquals(true, false);
+        MaloWLogger.error("Failed.", e);
+        fail(e.getMessage());
       }
     }
 
@@ -90,12 +94,13 @@ public class MixedStressTest
     public void closeSpecific()
     {
     }
-
   }
 
   @Test
   public void stressTest() throws Exception
   {
+    DecimalFormat df = new DecimalFormat("#.##");
+    progress = new AtomicInteger(0);
     List<Runner> runners = new ArrayList<Runner>();
     for (int i = 0; i < THREAD_COUNT; i++)
     {
@@ -105,10 +110,18 @@ public class MixedStressTest
     {
       runners.get(i).start();
     }
-    for (int i = 0; i < THREAD_COUNT; i++)
+    boolean done = false;
+    while (!done)
     {
-      runners.get(i).waitUntillDone();
+      done = true;
+      for (int i = 0; i < THREAD_COUNT; i++)
+      {
+        if (!runners.get(i).getState().equals(MaloWProcess.ProcessState.FINISHED))
+        {
+          done = false;
+        }
+      }
+      System.out.println("Progress: " + df.format(progress.doubleValue() / (THREAD_COUNT * REQUESTS_PER_THREAD) * 100) + "%");
     }
-    assertEquals(true, true);
   }
 }
