@@ -7,19 +7,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import com.github.malow.accountserver.testhelpers.ServerConnection;
-import com.github.malow.accountserver.testhelpers.TestHelpers;
+import com.github.malow.accountserver.AccountServerTestFixture;
+import com.github.malow.accountserver.ServerConnection;
 import com.github.malow.malowlib.MaloWLogger;
 import com.github.malow.malowlib.RandomNumberGenerator;
 import com.github.malow.malowlib.malowprocess.MaloWProcess;
 
-public class MixedStressTest
+public class MixedStressTest extends AccountServerTestFixture
 {
   private static final int THREAD_COUNT = 10;
-  private static final int REQUESTS_PER_THREAD = 100;
+  private static final int REQUESTS_PER_THREAD = 50;
   private static final String[] RANDOM_STRINGS = { "A", "B", "C", "D" };
   private static AtomicInteger progress;
 
@@ -28,15 +27,9 @@ public class MixedStressTest
     return RANDOM_STRINGS[RandomNumberGenerator.getRandomInt(0, RANDOM_STRINGS.length - 1)];
   }
 
-  @Before
-  public void setup() throws Exception
-  {
-    TestHelpers.beforeTest();
-  }
-
   private static void doRandomRegister() throws Exception
   {
-    ServerConnection.register(getRandomString(), getRandomString(), getRandomString());
+    ServerConnection.register(getRandomString(), getRandomString());
   }
 
   private static void doRandomLogin() throws Exception

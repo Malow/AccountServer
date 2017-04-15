@@ -1,4 +1,4 @@
-package com.github.malow.accountserver.testhelpers;
+package com.github.malow.accountserver;
 
 import com.github.malow.malowlib.network.https.HttpsPostClient;
 
@@ -6,9 +6,9 @@ public class ServerConnection
 {
   public static final HttpsPostClient httpsPostClient = new HttpsPostClient(Config.HOST, true);
 
-  public static String register(String email, String username, String password) throws Exception
+  public static String register(String email, String password) throws Exception
   {
-    String request = JsonRequests.register(email, username, password);
+    String request = JsonRequests.register(email, password);
     return httpsPostClient.sendMessage("/register", request);
   }
 

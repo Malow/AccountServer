@@ -1,4 +1,4 @@
-package com.github.malow.accountserver.testhelpers;
+package com.github.malow.accountserver;
 
 public class Config
 {

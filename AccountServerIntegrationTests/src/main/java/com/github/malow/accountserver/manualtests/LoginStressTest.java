@@ -8,31 +8,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.Before;
 import org.junit.Test;
 
+import com.github.malow.accountserver.AccountServerTestFixture;
+import com.github.malow.accountserver.ServerConnection;
 import com.github.malow.accountserver.comstructs.account.LoginResponse;
-import com.github.malow.accountserver.testhelpers.ServerConnection;
-import com.github.malow.accountserver.testhelpers.TestHelpers;
 import com.github.malow.malowlib.GsonSingleton;
 import com.github.malow.malowlib.MaloWLogger;
 import com.github.malow.malowlib.malowprocess.MaloWProcess;
 
-public class LoginStressTest
+public class LoginStressTest extends AccountServerTestFixture
 {
   private static final int THREAD_COUNT = 10;
-  private static final int REQUESTS_PER_THREAD = 100;
-  private static final String TEST_PASSWORD = "testerpw";
-  private static final String TEST_USERNAME = "tester";
-  private static final String TEST_EMAIL = "tester@test.com";
+  private static final int REQUESTS_PER_THREAD = 50;
 
   private static AtomicInteger progress;
-
-  @Before
-  public void setup() throws Exception
-  {
-    TestHelpers.beforeTest();
-  }
 
   private static class Runner extends MaloWProcess
   {
@@ -47,7 +37,7 @@ public class LoginStressTest
           LoginResponse response = GsonSingleton.fromJson(jsonResponse, LoginResponse.class);
 
           assertThat(response.result).isTrue();
-          assertThat(TestHelpers.isValidToken(response.authToken)).isTrue();
+          assertThat(isValidToken(response.authToken)).isTrue();
           progress.incrementAndGet();
         }
         catch (Exception e)
@@ -69,7 +59,7 @@ public class LoginStressTest
   {
     DecimalFormat df = new DecimalFormat("#.##");
     progress = new AtomicInteger(0);
-    ServerConnection.register(TEST_EMAIL, TEST_USERNAME, TEST_PASSWORD);
+    ServerConnection.register(TEST_EMAIL, TEST_PASSWORD);
     List<Runner> runners = new ArrayList<Runner>();
     for (int i = 0; i < THREAD_COUNT; i++)
     {

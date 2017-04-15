@@ -1,4 +1,4 @@
-package com.github.malow.accountserver.testhelpers;
+package com.github.malow.accountserver;
 
 import com.github.malow.accountserver.comstructs.Request;
 import com.github.malow.accountserver.comstructs.account.LoginRequest;
@@ -8,9 +8,9 @@ import com.github.malow.malowlib.GsonSingleton;
 
 public class JsonRequests
 {
-  public static String register(String email, String username, String password)
+  public static String register(String email, String password)
   {
-    return GsonSingleton.toJson(new RegisterRequest(email, username, password));
+    return GsonSingleton.toJson(new RegisterRequest(email, password));
   }
 
   public static String login(String email, String password)

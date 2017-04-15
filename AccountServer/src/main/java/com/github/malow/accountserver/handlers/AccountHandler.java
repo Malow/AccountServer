@@ -29,7 +29,7 @@ public class AccountHandler
     NamedMutex mutex = NamedMutexHandler.getAndLockByName(req.email);
     try
     {
-      Account acc = accountAccessor.read(req.email);
+      Account acc = accountAccessor.readByEmail(req.email);
       if (PasswordHandler.checkPassword(req.password, acc.password))
       {
         String authToken = UUID.randomUUID().toString();
@@ -70,7 +70,6 @@ public class AccountHandler
     {
       String authToken = UUID.randomUUID().toString();
       Account acc = new Account();
-      acc.username = req.username;
       acc.password = PasswordHandler.hashPassword(req.password);
       acc.email = req.email;
       acc.authToken = authToken;
@@ -80,19 +79,7 @@ public class AccountHandler
     }
     catch (UniqueException e)
     {
-      if (e.fieldName.equals("email"))
-      {
-        return new ErrorResponse(false, ErrorMessages.EMAIL_TAKEN);
-      }
-      else if (e.fieldName.equals("username"))
-      {
-        return new ErrorResponse(false, ErrorMessages.USERNAME_TAKEN);
-      }
-      else
-      {
-        MaloWLogger.error("Unexpected Database error when trying to register", e);
-        return new ErrorResponse(false, ErrorMessages.UNEXPECTED_ERROR);
-      }
+      return new ErrorResponse(false, ErrorMessages.EMAIL_TAKEN);
     }
     catch (Exception e)
     {
@@ -126,7 +113,7 @@ public class AccountHandler
     NamedMutex mutex = NamedMutexHandler.getAndLockByName(req.email);
     try
     {
-      Account acc = accountAccessor.read(req.email);
+      Account acc = accountAccessor.readByEmail(req.email);
       if (acc.pwResetToken != null && acc.pwResetToken.equals(req.pwResetToken))
       {
         String authToken = UUID.randomUUID().toString();

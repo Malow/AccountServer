@@ -34,7 +34,7 @@ public class HttpsApiHandlers
     @Override
     public String handleRequestAndGetResponse(String request) throws BadRequestException
     {
-      LoginRequest req = (LoginRequest) createValidJsonRequest(request, LoginRequest.class);
+      LoginRequest req = createValidJsonRequest(request, LoginRequest.class);
       Response resp = AccountHandler.login(req);
       return GsonSingleton.toJson(resp);
     }
@@ -45,7 +45,7 @@ public class HttpsApiHandlers
     @Override
     public String handleRequestAndGetResponse(String request) throws BadRequestException
     {
-      RegisterRequest req = (RegisterRequest) createValidJsonRequest(request, RegisterRequest.class);
+      RegisterRequest req = createValidJsonRequest(request, RegisterRequest.class);
       Response resp = AccountHandler.register(req);
       return GsonSingleton.toJson(resp);
     }
@@ -56,7 +56,7 @@ public class HttpsApiHandlers
     @Override
     public String handleRequestAndGetResponse(String request) throws BadRequestException
     {
-      Request req = (Request) createValidJsonRequest(request, Request.class);
+      Request req = createValidJsonRequest(request, Request.class);
       Response resp = AccountHandler.sendPasswordResetToken(req);
       return GsonSingleton.toJson(resp);
     }
@@ -67,7 +67,7 @@ public class HttpsApiHandlers
     @Override
     public String handleRequestAndGetResponse(String request) throws BadRequestException
     {
-      ResetPasswordRequest req = (ResetPasswordRequest) createValidJsonRequest(request, ResetPasswordRequest.class);
+      ResetPasswordRequest req = createValidJsonRequest(request, ResetPasswordRequest.class);
       Response resp = AccountHandler.resetPassword(req);
       return GsonSingleton.toJson(resp);
     }

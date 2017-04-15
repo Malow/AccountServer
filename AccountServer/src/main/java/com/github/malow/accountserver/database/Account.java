@@ -6,13 +6,11 @@ public class Account extends DatabaseTableEntity
 {
   // Persisted in database
   @Unique
-  public String username;
-  public String password;
-  @Unique
   public String email;
+  public String password;
+  public Integer failedLoginAttempts = 0;
   @Optional
   public String pwResetToken;
-  public Integer failedLoginAttempts = 0;
 
   // Only cached in memory
   @NotPersisted

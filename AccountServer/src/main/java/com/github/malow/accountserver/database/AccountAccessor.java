@@ -3,7 +3,6 @@ package com.github.malow.accountserver.database;
 import java.sql.PreparedStatement;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.github.malow.malowlib.MaloWLogger;
 import com.github.malow.malowlib.database.Accessor;
 import com.github.malow.malowlib.database.DatabaseConnection;
 import com.github.malow.malowlib.database.DatabaseExceptions.ForeignKeyException;
@@ -36,32 +35,47 @@ public class AccountAccessor extends Accessor<Account>
   @Override
   public Account create(Account account) throws UniqueException, ForeignKeyException, MissingMandatoryFieldException, UnexpectedException
   {
-    Account acc = super.create(account);
-    this.cacheByEmail.put(acc.email, acc);
+    account = super.create(account);
+    this.cacheByEmail.put(account.email, account);
     return account;
   }
 
   @Override
-  public boolean update(Account account) throws ZeroRowsReturnedException, MultipleRowsReturnedException, UnexpectedException
+  public Account read(Integer id) throws ZeroRowsReturnedException, MultipleRowsReturnedException, UnexpectedException
+  {
+    Account account = super.read(id);
+    this.cacheByEmail.put(account.email, account);
+    return account;
+  }
+
+  @Override
+  public void update(Account account) throws ZeroRowsReturnedException, MultipleRowsReturnedException, UnexpectedException
   {
     super.update(account);
     this.cacheByEmail.put(account.email, account);
-    return true;
   }
 
-  public Account read(String email) throws ZeroRowsReturnedException, UnexpectedException
+  @Override
+  public void delete(Integer id) throws ZeroRowsReturnedException, MultipleRowsReturnedException, UnexpectedException
   {
-    Account a = this.cacheByEmail.get(email);
-    if (a != null)
+    Account account = super.read(id);
+    super.delete(id);
+    this.cacheByEmail.remove(account);
+  }
+
+  public Account readByEmail(String email) throws ZeroRowsReturnedException, UnexpectedException
+  {
+    Account account = this.cacheByEmail.get(email);
+    if (account != null)
     {
-      return a;
+      return account;
     }
     PreparedStatement statement = null;
     try
     {
       statement = this.readByEmailStatements.get();
       statement.setString(1, email);
-      Account account = this.readWithPopulatedStatement(statement);
+      account = this.readWithPopulatedStatement(statement);
       this.cacheByEmail.put(account.email, account);
       this.readByEmailStatements.add(statement);
       return account;
@@ -137,19 +151,6 @@ public class AccountAccessor extends Accessor<Account>
       return acc.getId();
     }
     throw new WrongAuthentificationTokenException();
-  }
-
-  @Override
-  public void createTable()
-  {
-    try
-    {
-      super.createTable();
-    }
-    catch (Exception e)
-    {
-      MaloWLogger.error("Unexpected error when trying to createTable for " + this.entityClass.getSimpleName() + " in accessor", e);
-    }
   }
 }
 

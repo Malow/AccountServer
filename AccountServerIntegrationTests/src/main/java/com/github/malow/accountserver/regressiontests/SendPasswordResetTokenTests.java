@@ -2,38 +2,27 @@ package com.github.malow.accountserver.regressiontests;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
 import org.junit.Test;
 
+import com.github.malow.accountserver.AccountServerTestFixture;
 import com.github.malow.accountserver.ErrorMessages;
+import com.github.malow.accountserver.ServerConnection;
 import com.github.malow.accountserver.comstructs.ErrorResponse;
 import com.github.malow.accountserver.comstructs.Response;
-import com.github.malow.accountserver.testhelpers.ServerConnection;
-import com.github.malow.accountserver.testhelpers.TestHelpers;
 import com.github.malow.malowlib.GsonSingleton;
 
-public class SendPasswordResetTokenTests
+public class SendPasswordResetTokenTests extends AccountServerTestFixture
 {
-  private static final String TEST_PASSWORD = "testerpw";
-  private static final String TEST_USERNAME = "tester";
-  private static final String TEST_EMAIL = "tester@test.com";
-
-  @Before
-  public void setup() throws Exception
-  {
-    TestHelpers.beforeTest();
-  }
-
   @Test
   public void sendPasswordResetTokenSucessfullyTest() throws Exception
   {
-    ServerConnection.register(TEST_EMAIL, TEST_USERNAME, TEST_PASSWORD);
+    ServerConnection.register(TEST_EMAIL, TEST_PASSWORD);
 
     String jsonResponse = ServerConnection.sendPasswordResetToken(TEST_EMAIL);
     Response response = GsonSingleton.fromJson(jsonResponse, Response.class);
 
     assertEquals(true, response.result);
-    assertEquals(true, TestHelpers.isValidToken(TestHelpers.getPasswordResetTokenForEmail(TEST_EMAIL)));
+    assertEquals(true, isValidToken(getPasswordResetTokenForEmail(TEST_EMAIL)));
   }
 
   @Test
