@@ -5,6 +5,7 @@ import com.github.malow.accountserver.comstructs.Response;
 import com.github.malow.accountserver.comstructs.account.LoginRequest;
 import com.github.malow.accountserver.comstructs.account.RegisterRequest;
 import com.github.malow.accountserver.comstructs.account.ResetPasswordRequest;
+import com.github.malow.accountserver.database.AccountAccessorSingleton;
 import com.github.malow.malowlib.GsonSingleton;
 import com.github.malow.malowlib.network.https.HttpsPostHandler;
 
@@ -24,7 +25,7 @@ public class HttpsApiHandlers
     @Override
     public String handleRequestAndGetResponse(String request)
     {
-      AccountHandler.accountAccessor.clearCache();
+      AccountAccessorSingleton.get().clearCache();
       return GsonSingleton.toJson(new Response(true));
     }
   }

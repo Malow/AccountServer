@@ -27,7 +27,7 @@ public class AccountAccessor extends Accessor<Account>
 
   public AccountAccessor(DatabaseConnection databaseConnection)
   {
-    super(databaseConnection, Account.class);
+    super(databaseConnection);
     this.readByEmailStatements = this.createPreparedStatementPool("SELECT * FROM " + this.tableName + " WHERE email = ?");
     this.updatePwResetTokenStatements = this.createPreparedStatementPool("UPDATE " + this.tableName + " SET pwResetToken = ? WHERE email = ?");
   }

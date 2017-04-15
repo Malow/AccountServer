@@ -1,7 +1,7 @@
 package com.github.malow.accountserver.comstructs;
 
 import com.github.malow.accountserver.database.AccountAccessor.WrongAuthentificationTokenException;
-import com.github.malow.accountserver.handlers.AccountHandler;
+import com.github.malow.accountserver.database.AccountAccessorSingleton;
 
 public class AuthorizedRequest extends Request
 {
@@ -18,7 +18,7 @@ public class AuthorizedRequest extends Request
   {
     try
     {
-      this.accountId = AccountHandler.accountAccessor.checkAuthTokenAndGetAccId(this.email, this.authToken);
+      this.accountId = AccountAccessorSingleton.get().checkAuthTokenAndGetAccId(this.email, this.authToken);
       return true;
     }
     catch (WrongAuthentificationTokenException e)

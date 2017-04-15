@@ -1,7 +1,7 @@
 package com.github.malow.accountserver;
 
 import com.github.malow.accountserver.database.AccountAccessor.WrongAuthentificationTokenException;
-import com.github.malow.accountserver.handlers.AccountHandler;
+import com.github.malow.accountserver.database.AccountAccessorSingleton;
 import com.github.malow.accountserver.handlers.EmailHandler;
 import com.github.malow.accountserver.handlers.HttpsApiHandlers.ClearCacheHandler;
 import com.github.malow.accountserver.handlers.HttpsApiHandlers.LoginHandler;
@@ -26,12 +26,13 @@ import com.github.malow.malowlib.network.https.HttpsPostServer;
 public class AccountServer
 {
   private static HttpsPostServer httpsServer;
-  public static DatabaseConnection databaseConnection;
+  private static DatabaseConnection databaseConnection;
 
   public static void start(AccountServerConfig config)
   {
     EmailHandler.init(config.gmailUsername, config.gmailPassword, config.appName, config.enableEmailSending);
     databaseConnection = config.databaseConnection;
+    AccountAccessorSingleton.init(databaseConnection);
 
     MaloWLogger.info("Starting AccountServer for " + config.appName + " in directory " + System.getProperty("user.dir") + " using port "
         + config.httpsConfig.port);
@@ -50,7 +51,7 @@ public class AccountServer
 
   public static Integer checkAuthentication(String email, String authToken) throws WrongAuthentificationTokenException
   {
-    Integer accId = AccountHandler.accountAccessor.checkAuthTokenAndGetAccId(email, authToken);
+    Integer accId = AccountAccessorSingleton.get().checkAuthTokenAndGetAccId(email, authToken);
     return accId;
   }
 
