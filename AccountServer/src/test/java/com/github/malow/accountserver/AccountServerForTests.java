@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import com.github.malow.malowlib.database.DatabaseConnection;
 import com.github.malow.malowlib.database.DatabaseConnection.DatabaseType;
+import com.github.malow.malowlib.network.https.HttpsPostServer;
 import com.github.malow.malowlib.network.https.HttpsPostServerConfig;
 import com.github.malow.malowlib.network.https.HttpsPostServerConfig.JksFileConfig;
 
@@ -15,14 +16,15 @@ public class AccountServerForTests
   public void runForIntegrationTests() throws Exception
   {
     HttpsPostServerConfig httpsConfig = new HttpsPostServerConfig(7000, new JksFileConfig("https_key.jks"), "password");
-    httpsConfig.useMultipleThreads = false;
-    AccountServerConfig config = new AccountServerConfig(DatabaseConnection.get(DatabaseType.SQLITE_FILE, "AccountServer"), httpsConfig,
+    HttpsPostServer httpsServer = new HttpsPostServer(httpsConfig);
+    httpsServer.start();
+    AccountServerConfig config = new AccountServerConfig(DatabaseConnection.get(DatabaseType.SQLITE_FILE, "AccountServer"),
         "gladiatormanager.noreply", "passwordFU", "AccountServerTest");
 
     config.enableEmailSending = false;
     config.allowClearCacheOperation = true;
 
-    AccountServer.start(config);
+    AccountServer.start(config, httpsServer);
 
     String input = "";
     Scanner in = new Scanner(System.in);
@@ -32,7 +34,7 @@ public class AccountServerForTests
       input = in.next();
     }
     in.close();
-
+    httpsServer.close();
     AccountServer.close();
   }
 }

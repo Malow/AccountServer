@@ -10,7 +10,6 @@ import com.github.malow.accountserver.handlers.HttpsApiHandlers.ResetPasswordHan
 import com.github.malow.accountserver.handlers.HttpsApiHandlers.SendPasswordResetTokenHandler;
 import com.github.malow.accountserver.handlers.HttpsApiHandlers.TestHandler;
 import com.github.malow.malowlib.MaloWLogger;
-import com.github.malow.malowlib.database.DatabaseConnection;
 import com.github.malow.malowlib.network.https.HttpsPostServer;
 
 /**
@@ -25,28 +24,22 @@ import com.github.malow.malowlib.network.https.HttpsPostServer;
  */
 public class AccountServer
 {
-  private static HttpsPostServer httpsServer;
-  private static DatabaseConnection databaseConnection;
-
-  public static void start(AccountServerConfig config)
+  public static void start(AccountServerConfig config, HttpsPostServer httpsServer)
   {
     EmailHandler.init(config.gmailUsername, config.gmailPassword, config.appName, config.enableEmailSending);
-    databaseConnection = config.databaseConnection;
-    AccountAccessorSingleton.init(databaseConnection);
+    AccountAccessorSingleton.init(config.databaseConnection);
 
-    MaloWLogger.info("Starting AccountServer for " + config.appName + " in directory " + System.getProperty("user.dir") + " using port "
-        + config.httpsConfig.port);
-    httpsServer = new HttpsPostServer(config.httpsConfig);
-    httpsServer.createContext(config.testPath, new TestHandler());
-    httpsServer.createContext(config.loginPath, new LoginHandler());
-    httpsServer.createContext(config.registerPath, new RegisterHandler());
-    httpsServer.createContext(config.sendPwResetTokenPath, new SendPasswordResetTokenHandler());
-    httpsServer.createContext(config.resetPwPath, new ResetPasswordHandler());
+    MaloWLogger.info("Starting AccountServer for " + config.appName + " in directory " + System.getProperty("user.dir") + " using "
+        + config.httpsRootPath + " as root path.");
+    httpsServer.createContext(config.httpsRootPath + config.testPath, new TestHandler());
+    httpsServer.createContext(config.httpsRootPath + config.loginPath, new LoginHandler());
+    httpsServer.createContext(config.httpsRootPath + config.registerPath, new RegisterHandler());
+    httpsServer.createContext(config.httpsRootPath + config.sendPwResetTokenPath, new SendPasswordResetTokenHandler());
+    httpsServer.createContext(config.httpsRootPath + config.resetPwPath, new ResetPasswordHandler());
     if (config.allowClearCacheOperation)
     {
-      httpsServer.createContext(config.clearCachePath, new ClearCacheHandler());
+      httpsServer.createContext(config.httpsRootPath + config.clearCachePath, new ClearCacheHandler());
     }
-    httpsServer.start();
   }
 
   public static Integer checkAuthentication(String email, String authToken) throws WrongAuthentificationTokenException
@@ -57,9 +50,6 @@ public class AccountServer
 
   public static void close()
   {
-    httpsServer.close();
-    databaseConnection.close();
-
-    MaloWLogger.info("Server closed successfully");
+    MaloWLogger.info("AccountServer closed successfully");
   }
 }

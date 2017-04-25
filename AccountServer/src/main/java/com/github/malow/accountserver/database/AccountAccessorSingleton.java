@@ -6,15 +6,15 @@ public enum AccountAccessorSingleton
 {
   INSTANCE;
 
-  private AccountAccessor accountAccessor;
+  private AccountAccessor accessor;
 
   public static AccountAccessor get()
   {
-    return INSTANCE.accountAccessor;
+    return INSTANCE.accessor;
   }
 
   public static void init(DatabaseConnection databaseConnection)
   {
-    INSTANCE.accountAccessor = new AccountAccessor(databaseConnection);
+    INSTANCE.accessor = new AccountAccessor(databaseConnection);
   }
 }
