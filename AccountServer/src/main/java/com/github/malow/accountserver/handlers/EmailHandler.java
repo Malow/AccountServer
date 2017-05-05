@@ -45,6 +45,16 @@ public class EmailHandler
     EmailHandler.enabled = enabled;
   }
 
+  public static void disableEmailSending()
+  {
+    enabled = false;
+  }
+
+  public static void enableEmailSending()
+  {
+    enabled = false;
+  }
+
   public static boolean sendPasswordResetTokenMail(String to, String token)
   {
     return sendMail(to, "Your password reset for " + appName, token);
@@ -52,7 +62,10 @@ public class EmailHandler
 
   public static boolean sendMail(String to, String subject, String msg)
   {
-    if (!enabled) return false;
+    if (!enabled)
+    {
+      return false;
+    }
 
     Session session = Session.getInstance(props, null);
     MimeMessage message = new MimeMessage(session);

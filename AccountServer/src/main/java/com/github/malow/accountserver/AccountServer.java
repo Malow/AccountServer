@@ -44,8 +44,27 @@ public class AccountServer
 
   public static Integer checkAuthentication(String email, String authToken) throws WrongAuthentificationTokenException
   {
-    Integer accId = AccountAccessorSingleton.get().checkAuthTokenAndGetAccId(email, authToken);
-    return accId;
+    return AccountAccessorSingleton.get().checkAuthTokenAndGetAccId(email, authToken);
+  }
+
+  /**
+   * Deletes old existing tables and creates new empty ones.
+   *
+   * @throws Exception
+   */
+  public static void createDatabases() throws Exception
+  {
+    AccountAccessorSingleton.get().createTable();
+  }
+
+  public static void disableEmailSending()
+  {
+    EmailHandler.disableEmailSending();
+  }
+
+  public static void enableEmailSending()
+  {
+    EmailHandler.enableEmailSending();
   }
 
   public static void close()
