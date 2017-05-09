@@ -14,7 +14,9 @@ public class PasswordHandler
   public static boolean checkPassword(String password_plaintext, String password_encrypted)
   {
     if (password_encrypted == null || !password_encrypted.startsWith("$2a$"))
+    {
       throw new java.lang.IllegalArgumentException("Invalid hash provided for comparison");
+    }
     return BCrypt.checkpw(password_plaintext, password_encrypted);
   }
 }

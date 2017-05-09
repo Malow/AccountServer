@@ -22,7 +22,7 @@ public class AccountServerForTests
         "gladiatormanager.noreply", "passwordFU", "AccountServerTest");
 
     config.enableEmailSending = false;
-    config.allowClearCacheOperation = true;
+    config.allowTestOperations = true;
 
     AccountServer.start(config, httpsServer);
 

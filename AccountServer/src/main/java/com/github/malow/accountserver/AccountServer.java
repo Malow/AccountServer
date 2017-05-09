@@ -31,13 +31,13 @@ public class AccountServer
 
     MaloWLogger.info("Starting AccountServer for " + config.appName + " in directory " + System.getProperty("user.dir") + " using "
         + config.httpsRootPath + " as root path.");
-    httpsServer.createContext(config.httpsRootPath + config.testPath, new TestHandler());
     httpsServer.createContext(config.httpsRootPath + config.loginPath, new LoginHandler());
     httpsServer.createContext(config.httpsRootPath + config.registerPath, new RegisterHandler());
     httpsServer.createContext(config.httpsRootPath + config.sendPwResetTokenPath, new SendPasswordResetTokenHandler());
     httpsServer.createContext(config.httpsRootPath + config.resetPwPath, new ResetPasswordHandler());
-    if (config.allowClearCacheOperation)
+    if (config.allowTestOperations)
     {
+      httpsServer.createContext(config.httpsRootPath + config.testPath, new TestHandler());
       httpsServer.createContext(config.httpsRootPath + config.clearCachePath, new ClearCacheHandler());
     }
   }

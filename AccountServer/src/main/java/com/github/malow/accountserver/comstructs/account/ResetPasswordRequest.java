@@ -17,7 +17,10 @@ public class ResetPasswordRequest extends Request
   @Override
   public boolean isValid()
   {
-    if (super.isValid() && this.password != null && this.pwResetToken != null) return true;
+    if (super.isValid() && this.password != null && this.pwResetToken != null)
+    {
+      return true;
+    }
 
     return false;
   }

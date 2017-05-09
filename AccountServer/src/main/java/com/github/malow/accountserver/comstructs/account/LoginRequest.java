@@ -15,7 +15,10 @@ public class LoginRequest extends Request
   @Override
   public boolean isValid()
   {
-    if (super.isValid() && this.password != null) return true;
+    if (super.isValid() && this.password != null)
+    {
+      return true;
+    }
 
     return false;
   }

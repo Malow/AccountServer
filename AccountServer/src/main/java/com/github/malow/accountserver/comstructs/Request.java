@@ -14,7 +14,10 @@ public class Request implements HttpsPostRequest
   @Override
   public boolean isValid()
   {
-    if (this.email != null) return true;
+    if (this.email != null)
+    {
+      return true;
+    }
 
     return false;
   }
