@@ -3,6 +3,7 @@ package com.github.malow.accountserver.database;
 import java.sql.PreparedStatement;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.github.malow.malowlib.MaloWLogger;
 import com.github.malow.malowlib.database.Accessor;
 import com.github.malow.malowlib.database.DatabaseConnection;
 import com.github.malow.malowlib.database.DatabaseExceptions.ForeignKeyException;
@@ -150,6 +151,7 @@ public class AccountAccessor extends Accessor<Account>
     {
       return acc.getId();
     }
+    MaloWLogger.info("AccountAccessor authentication failed for " + email + ".");
     throw new WrongAuthentificationTokenException();
   }
 }

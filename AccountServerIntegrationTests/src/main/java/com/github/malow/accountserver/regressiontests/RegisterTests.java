@@ -32,6 +32,6 @@ public class RegisterTests extends AccountServerTestFixture
     ErrorResponse response = GsonSingleton.fromJson(jsonResponse, ErrorResponse.class);
 
     assertEquals(false, response.result);
-    assertEquals(ErrorMessages.EMAIL_TAKEN, response.error);
+    assertEquals(ErrorMessages.EMAIL_ALREADY_REGISTERED, response.error);
   }
 }

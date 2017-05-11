@@ -43,14 +43,18 @@ public class AccountHandler
           acc.failedLoginAttempts = 0;
           accountAccessor.update(acc);
         }
+        MaloWLogger.info("Login request for " + req.email + " was successful.");
         return new LoginResponse(true, authToken);
       }
       acc.failedLoginAttempts += 1;
       accountAccessor.update(acc);
+      MaloWLogger.info("Login request for " + req.email + " but wrong password was provided. " + acc.failedLoginAttempts
+          + " failed login attempts since last succesful login.");
       return new ErrorResponse(false, ErrorMessages.WRONG_PASSWORD);
     }
     catch (ZeroRowsReturnedException e)
     {
+      MaloWLogger.info("Login request for " + req.email + " failed due to no account found for that email.");
       return new ErrorResponse(false, ErrorMessages.EMAIL_NOT_REGISTERED);
     }
     catch (Exception e)
@@ -75,11 +79,13 @@ public class AccountHandler
       acc.authToken = authToken;
 
       accountAccessor.create(acc);
+      MaloWLogger.info("Register request for " + req.email + " was successful.");
       return new LoginResponse(true, authToken);
     }
     catch (UniqueException e)
     {
-      return new ErrorResponse(false, ErrorMessages.EMAIL_TAKEN);
+      MaloWLogger.info("Register request for " + req.email + " failed due to email already being registered.");
+      return new ErrorResponse(false, ErrorMessages.EMAIL_ALREADY_REGISTERED);
     }
     catch (Exception e)
     {
@@ -95,10 +101,12 @@ public class AccountHandler
       String pwResetToken = UUID.randomUUID().toString();
       accountAccessor.updatePasswordResetToken(req.email, pwResetToken);
       EmailHandler.sendPasswordResetTokenMail(req.email, pwResetToken);
+      MaloWLogger.info("SendPasswordResetToken request for " + req.email + " was successful.");
       return new Response(true);
     }
     catch (ZeroRowsReturnedException e)
     {
+      MaloWLogger.info("SendPasswordResetToken request for " + req.email + " failed due to no account found for that email.");
       return new ErrorResponse(false, ErrorMessages.EMAIL_NOT_REGISTERED);
     }
     catch (UnexpectedException e)
@@ -121,12 +129,15 @@ public class AccountHandler
         acc.password = PasswordHandler.hashPassword(req.password);
         acc.pwResetToken = null;
         accountAccessor.update(acc);
+        MaloWLogger.info("ResetPassword request for " + req.email + " was successful.");
         return new LoginResponse(true, authToken);
       }
+      MaloWLogger.info("ResetPassword request for " + req.email + " failed due to bad passwordResetToken.");
       return new ErrorResponse(false, ErrorMessages.BAD_PW_RESET_TOKEN);
     }
     catch (ZeroRowsReturnedException e)
     {
+      MaloWLogger.info("ResetPassword request for " + req.email + " failed due to no account found for that email.");
       return new ErrorResponse(false, ErrorMessages.EMAIL_NOT_REGISTERED);
     }
     catch (Exception e)

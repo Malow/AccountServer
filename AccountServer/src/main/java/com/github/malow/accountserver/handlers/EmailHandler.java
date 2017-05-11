@@ -48,11 +48,13 @@ public class EmailHandler
   public static void disableEmailSending()
   {
     enabled = false;
+    MaloWLogger.info("Email-sending for AccountServer enabled.");
   }
 
   public static void enableEmailSending()
   {
     enabled = false;
+    MaloWLogger.info("Email-sending for AccountServer disabled.");
   }
 
   public static boolean sendPasswordResetTokenMail(String to, String token)
@@ -101,6 +103,7 @@ public class EmailHandler
       Transport transport = session.getTransport("smtp");
       transport.connect("smtp.gmail.com", username, password);
       transport.sendMessage(message, message.getAllRecipients());
+      MaloWLogger.info("PasswordReset-Email sent to " + to + ".");
       return true;
     }
     catch (Exception e)

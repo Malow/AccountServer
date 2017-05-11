@@ -2,6 +2,7 @@
 */logs
 */target
 *.db
+*LetsEncryptCerts
 
 # Created by https://www.gitignore.io/api/java,eclipse
 

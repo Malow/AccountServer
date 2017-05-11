@@ -17,9 +17,9 @@ import com.github.malow.malowlib.network.https.HttpsPostServer;
  * How to use: Create an AccountServerConfig object, populate it with all config, call AccountServer.start(config). A thread will be created that runs the
  * HTTPS-server API and your thread will return for you to do whatever with. Register, Login and ResetPW requests will all return responses that contains an
  * authToken. This authToken should then be used to make further authorized requests which your program will handle. To check the authentication of these
- * request simply call CheckAuthentication on this class sending in the email and authToken, and it will return the accountId that you can then use as foreign
- * keys etc. for your tables. If the authentication fails an exception will be thrown. Finally when you're done simply call AccountServer.close() to shut it all
- * down.
+ * request simply call authenticateAndGetAccountId on this class sending in the email and authToken, and it will return the accountId that you can then use as
+ * foreign keys etc. for your tables. If the authentication fails an exception will be thrown. Finally when you're done simply call AccountServer.close() to
+ * shut it all down.
  *
  */
 public class AccountServer
@@ -42,7 +42,7 @@ public class AccountServer
     }
   }
 
-  public static Integer checkAuthentication(String email, String authToken) throws WrongAuthentificationTokenException
+  public static Integer authenticateAndGetAccountId(String email, String authToken) throws WrongAuthentificationTokenException
   {
     return AccountAccessorSingleton.get().checkAuthTokenAndGetAccId(email, authToken);
   }
