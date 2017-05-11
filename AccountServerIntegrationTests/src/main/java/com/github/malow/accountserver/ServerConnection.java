@@ -32,6 +32,6 @@ public class ServerConnection
 
   public static void clearCache() throws Exception
   {
-    httpsPostClient.sendMessage("/account/clearcache", "");
+    httpsPostClient.sendMessage("/account/clearcache", "{}");
   }
 }

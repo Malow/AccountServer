@@ -1,11 +1,11 @@
 package com.github.malow.accountserver.comstructs;
 
-public class Response
-{
-  public boolean result;
+import com.github.malow.malowlib.network.https.HttpsPostResponse;
 
+public class Response extends HttpsPostResponse
+{
   public Response(boolean result)
   {
-    this.result = result;
+    super(result);
   }
 }
