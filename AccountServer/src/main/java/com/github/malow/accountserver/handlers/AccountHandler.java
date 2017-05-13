@@ -18,7 +18,6 @@ import com.github.malow.malowlib.database.DatabaseExceptions.UnexpectedException
 import com.github.malow.malowlib.database.DatabaseExceptions.UniqueException;
 import com.github.malow.malowlib.database.DatabaseExceptions.ZeroRowsReturnedException;
 import com.github.malow.malowlib.namedmutex.NamedMutex;
-import com.github.malow.malowlib.namedmutex.NamedMutexHandler;
 
 public class AccountHandler
 {
@@ -26,7 +25,7 @@ public class AccountHandler
 
   public static Response login(LoginRequest req)
   {
-    NamedMutex mutex = NamedMutexHandler.getAndLockByName(req.email);
+    NamedMutex mutex = Account.lockByEmail(req.email);
     try
     {
       Account acc = accountAccessor.readByEmail(req.email);
@@ -118,7 +117,7 @@ public class AccountHandler
 
   public static Response resetPassword(ResetPasswordRequest req)
   {
-    NamedMutex mutex = NamedMutexHandler.getAndLockByName(req.email);
+    NamedMutex mutex = Account.lockByEmail(req.email);
     try
     {
       Account acc = accountAccessor.readByEmail(req.email);
