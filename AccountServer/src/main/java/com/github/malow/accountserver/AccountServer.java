@@ -10,7 +10,7 @@ import com.github.malow.accountserver.handlers.HttpsApiHandlers.ResetPasswordHan
 import com.github.malow.accountserver.handlers.HttpsApiHandlers.SendPasswordResetTokenHandler;
 import com.github.malow.accountserver.handlers.HttpsApiHandlers.TestHandler;
 import com.github.malow.malowlib.MaloWLogger;
-import com.github.malow.malowlib.network.https.HttpsPostServer;
+import com.github.malow.malowlib.network.https.SimpleHttpsServer;
 
 /**
  *
@@ -24,7 +24,7 @@ import com.github.malow.malowlib.network.https.HttpsPostServer;
  */
 public class AccountServer
 {
-  public static void start(AccountServerConfig config, HttpsPostServer httpsServer)
+  public static void start(AccountServerConfig config, SimpleHttpsServer httpsServer)
   {
     EmailHandler.init(config.gmailUsername, config.gmailPassword, config.appName, config.enableEmailSending);
     AccountAccessorSingleton.init(config.databaseConnection);

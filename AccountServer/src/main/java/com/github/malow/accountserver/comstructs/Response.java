@@ -1,8 +1,8 @@
 package com.github.malow.accountserver.comstructs;
 
-import com.github.malow.malowlib.network.https.HttpsPostResponse;
+import com.github.malow.malowlib.network.https.HttpResponse;
 
-public class Response extends HttpsPostResponse
+public class Response extends HttpResponse
 {
   public Response(boolean result)
   {

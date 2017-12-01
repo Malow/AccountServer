@@ -1,8 +1,8 @@
 package com.github.malow.accountserver.comstructs;
 
-import com.github.malow.malowlib.network.https.HttpsPostRequest;
+import com.github.malow.malowlib.network.https.HttpRequest;
 
-public class Request implements HttpsPostRequest
+public class Request implements HttpRequest
 {
   public String email;
 
