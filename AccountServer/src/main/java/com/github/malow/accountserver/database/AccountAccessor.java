@@ -1,6 +1,5 @@
 package com.github.malow.accountserver.database;
 
-import java.sql.PreparedStatement;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.github.malow.malowlib.MaloWLogger;
@@ -9,6 +8,7 @@ import com.github.malow.malowlib.database.DatabaseConnection;
 import com.github.malow.malowlib.database.DatabaseExceptions.ForeignKeyException;
 import com.github.malow.malowlib.database.DatabaseExceptions.MissingMandatoryFieldException;
 import com.github.malow.malowlib.database.DatabaseExceptions.MultipleRowsReturnedException;
+import com.github.malow.malowlib.database.DatabaseExceptions.SimultaneousModificationException;
 import com.github.malow.malowlib.database.DatabaseExceptions.UnexpectedException;
 import com.github.malow.malowlib.database.DatabaseExceptions.UniqueException;
 import com.github.malow.malowlib.database.DatabaseExceptions.ZeroRowsReturnedException;
@@ -50,14 +50,14 @@ public class AccountAccessor extends Accessor<Account>
   }
 
   @Override
-  public void update(Account account) throws ZeroRowsReturnedException, MultipleRowsReturnedException, UnexpectedException
+  public void update(Account account) throws SimultaneousModificationException, MultipleRowsReturnedException, UnexpectedException
   {
     super.update(account);
     this.cacheByEmail.put(account.email, account);
   }
 
   @Override
-  public void delete(Integer id) throws ZeroRowsReturnedException, MultipleRowsReturnedException, UnexpectedException
+  public void delete(Integer id) throws ZeroRowsReturnedException, MultipleRowsReturnedException, UnexpectedException, ForeignKeyException
   {
     Account account = super.read(id);
     super.delete(id);
@@ -71,14 +71,14 @@ public class AccountAccessor extends Accessor<Account>
     {
       return account;
     }
-    PreparedStatement statement = null;
     try
     {
-      statement = this.readByEmailStatements.get();
-      statement.setString(1, email);
-      account = this.readWithPopulatedStatement(statement);
+      account = this.readByEmailStatements.useStatement(statement ->
+      {
+        statement.setString(1, email);
+        return this.readWithPopulatedStatement(statement);
+      });
       this.cacheByEmail.put(account.email, account);
-      this.readByEmailStatements.add(statement);
       return account;
     }
     catch (ZeroRowsReturnedException e)
@@ -87,29 +87,27 @@ public class AccountAccessor extends Accessor<Account>
     }
     catch (Exception e)
     {
-      this.closeStatement(statement);
-      this.logAndReThrowUnexpectedException(
+      throw this.logAndCreateUnexpectedException(
           "Unexpected error when trying to read a " + this.entityClass.getSimpleName() + " with email " + email + " in accessor", e);
     }
-    return null;
   }
 
   public void updatePasswordResetToken(String email, String pwResetToken) throws ZeroRowsReturnedException, UnexpectedException
   {
-    PreparedStatement statement = null;
     try
     {
-      statement = this.updatePwResetTokenStatements.get();
-      statement.setString(1, pwResetToken);
-      statement.setString(2, email);
-      this.updateWithPopulatedStatement(statement);
+      this.updatePwResetTokenStatements.useStatement(statement ->
+      {
+        statement.setString(1, pwResetToken);
+        statement.setString(2, email);
+        this.executeSingleUpdate(statement);
+      });
       Account cachedAccount = this.cacheByEmail.get(email);
       if (cachedAccount != null)
       {
         cachedAccount.pwResetToken = pwResetToken;
         this.cacheByEmail.put(email, cachedAccount);
       }
-      this.updatePwResetTokenStatements.add(statement);
     }
     catch (ZeroRowsReturnedException e)
     {
@@ -117,8 +115,7 @@ public class AccountAccessor extends Accessor<Account>
     }
     catch (Exception e)
     {
-      this.closeStatement(statement);
-      this.logAndReThrowUnexpectedException(
+      throw this.logAndCreateUnexpectedException(
           "Unexpected error when trying to updatePasswordResetToken a " + this.entityClass.getSimpleName() + " with email " + email + " in accessor",
           e);
     }
