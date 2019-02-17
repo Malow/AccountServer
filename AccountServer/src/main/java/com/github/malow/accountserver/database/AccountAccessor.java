@@ -21,7 +21,7 @@ public class AccountAccessor extends Accessor<Account>
     private static final long serialVersionUID = 1L;
   }
 
-  private ConcurrentHashMap<String, Account> cacheByEmail = new ConcurrentHashMap<String, Account>();
+  private ConcurrentHashMap<String, Account> cacheByEmail = new ConcurrentHashMap<>();
 
   private PreparedStatementPool readByEmailStatements;
   private PreparedStatementPool updatePwResetTokenStatements;

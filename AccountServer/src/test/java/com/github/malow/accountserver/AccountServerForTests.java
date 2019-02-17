@@ -28,7 +28,7 @@ public class AccountServerForTests
 
     String input = "";
     Scanner in = new Scanner(System.in);
-    while (!input.equals("Exit"))
+    while (!input.toLowerCase().equals("exit"))
     {
       System.out.print("> ");
       input = in.next();
